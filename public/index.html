@@ -1,43 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+            * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+      body {
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+          font-weight: 300;
+          background: #d0f3e2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #334155;
+          height: 100vh;
+          text-align: center;
+
+      }
+
+      .container {
+          background-color: white;
+          width: 400px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          padding: 40px;
+          padding-bottom: 60px;
+          border-radius: 50px;
+          box-shadow: 0 6px 18px rgba(0, 128, 128, 0.25),
+                  0 3px 10px rgba(50, 205, 156, 0.2);
+      }
+
+      .input-form {
+          padding: 8px;
+          border-radius: 10px;
+          border-color: aliceblue;
+          width: 250px;
+          margin: 10px;
+          outline: none;
+      }
+
+      label{
+          font-size: large;
+      }
+
+      .input-form:focus {
+        border-color: #32cda9;
+        box-shadow: 0 0 8px rgba(50, 205, 164, 0.5); /
+      }
+
+      .image-login{
+          margin-bottom: 35px;
+          width: 80px;
+          height: 80px;
+      }
+      .espacio {
+          height: 10px;
+      }
+
+      a{
+          color: rgb(49, 164, 126);
+          text-decoration: none;
+      }
+
+      button {
+          background-color: #d0f3e2;;
+          padding: 3px;
+          color: rgb(16, 194, 167);
+          border: none;
+          border-radius: 10px;
+          padding: 10px;
+          font-size: medium;
+          cursor: pointer;
+          margin: 3px;
+          margin-top: 20px;
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+          font-weight: 600;
+          transition: all 0.6s ease-in-out;
+      }
+
+      button:hover {
+          background-color:#0ca492;
+          color: #dcffef;
+
+      }
+
+      .link-register {
+          margin-top: 20px;
+      }
+
+      a:hover{
+          color: #0e695e;
+      }
+    </style>
   </head>
+
+  
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <div class="container">
+      <img
+        class="image-login"
+        src="https://i.pinimg.com/1200x/ba/8d/7a/ba8d7a6364bf8ce99756686cba83c695.jpg"
+        alt=""
+      />
+      <div class="espacio"></div>
+      <label for="Correo electronico"> Correo electronico</label>
+      <input type="text" class="input-form" />
+      <label for="Contraseña">Contraseña</label>
+      <input type="password" class="input-form" />
+      <div><a href="#">¿Olvidaste tu contraseña?</a></div>
+      <button class="btn-login">Iniciar sesion</button>
+      <div class="link-register">
+        ¿No tientes una cuenta? <a href="register.html">Registrate</a>
+      </div>
+    </div>
   </body>
 </html>
