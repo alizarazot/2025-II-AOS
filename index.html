@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -26,12 +26,12 @@
 
       .container {
           background-color: white;
-          width: 500px;
+          width: 400px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          padding: 30px;
+          padding: 40px;
           padding-bottom: 60px;
           border-radius: 50px;
           box-shadow: 0 6px 18px rgba(0, 128, 128, 0.25),
@@ -101,8 +101,7 @@
       }
     </style>
   </head>
-  
-  
+
   <body>
     <div class="container">
       <img
@@ -110,21 +109,15 @@
         src="https://i.pinimg.com/1200x/ba/8d/7a/ba8d7a6364bf8ce99756686cba83c695.jpg"
         alt=""
       />
-      <h2>Registro</h2>
-      <br>
-      <label for="Nombre" >Nombre</label>
-      <input type="text" class="input-form" placeholder="Nombre" />
-      <label for="Apellidos" >Apellidos</label>
-      <input type="password" class="input-form" placeholder="Apellidos"/>
+      <div class="espacio"></div>
       <label for="Correo electronico"> Correo electronico</label>
-      <input type="email" class="input-form" placeholder="Correo Electrónico"/>
+      <input type="text" class="input-form" />
       <label for="Contraseña">Contraseña</label>
-      <input type="password" class="input-form" placeholder="Contraseña"/>
-      <label for="Contraseña">Confirmar Contraseña</label>
-      <input type="password" class="input-form" placeholder="Confirmar Contraseña" />
-      <button class="btn-login">Regístrate</button>
+      <input type="password" class="input-form" />
+      <div><a href="reset.html">¿Olvidaste tu contraseña?</a></div>
+      <button class="btn-login">Iniciar sesion</button>
       <div class="link-register">
-        ¿Tienes una Cuenta? <a href="index.html">Inicia Sesión</a>
+        ¿No tientes una cuenta? <a href="register.html">Registrate</a>
       </div>
     </div>
   </body>
