@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { DashboardMenu } from "./menu";
+import { DashboardOverview } from "./overview";
 
 export function Dashboard() {
   return (
@@ -25,7 +26,10 @@ export function Dashboard() {
           <div className="px-2">
             <DashboardMenu className></DashboardMenu>
           </div>
-          <div className="container my-3">TODO: Add main section.</div>
+
+          <div className="container my-3">
+            <DashboardOverview></DashboardOverview>
+          </div>
         </div>
       </div>
 
