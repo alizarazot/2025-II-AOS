@@ -1,6 +1,4 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
@@ -8,26 +6,25 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div class="container">
+        <img
+          class="image-login"
+          src="https://i.pinimg.com/1200x/ba/8d/7a/ba8d7a6364bf8ce99756686cba83c695.jpg"
+          alt=""
+        />
+        <div class="espacio"></div>
+        <label for="Correo electronico"> Correo electronico</label>
+        <input type="text" class="input-form" />
+        <label for="Contraseña">Contraseña</label>
+        <input type="password" class="input-form" />
+        <div>
+          <a href="reset.html">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button class="btn-login">Iniciar sesion</button>
+        <div class="link-register">
+          ¿No tientes una cuenta? <a href="register.html">Registrate</a>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 }
