@@ -34,7 +34,7 @@ export function Login() {
                   />
                 </div>
                 <div className="mb-3 mt-3 text-center">
-                  <a href="/reset.html" className="small text-decoration-none">
+                  <a href="/reset" className="small text-decoration-none">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
@@ -43,7 +43,7 @@ export function Login() {
                 </button>
                 <div className="text-center mt-2 mb-2">
                   <span>¿No tienes una cuenta? </span>
-                  <a href="/register.html">Regístrate</a>
+                  <a href="/register">Regístrate</a>
                 </div>
               </form>
             </div>
