@@ -2,10 +2,12 @@ import { Link } from "react-router";
 
 import { DashboardMenu } from "./menu";
 import { DashboardOverview } from "./overview";
+import { CustomNavbar } from "./navbar";
 
 export function Dashboard() {
   return (
     <>
+      <CustomNavbar />
       <div className="min-vh-100">
         <nav className="navbar navbar-expand-sm">
           <div className="container-fluid">
