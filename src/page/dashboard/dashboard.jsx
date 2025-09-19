@@ -12,13 +12,9 @@ export function Dashboard() {
             <Link className="navbar-brand text-primary" to="/">
               Dashboard
             </Link>
-
-            {/* TODO: Login. */}
-            <form>
-              <button className="btn btn-outline-dark" disabled>
-                Logout
-              </button>
-            </form>
+            <Link to="/login" className="btn btn-outline-dark">
+              Logout
+            </Link>
           </div>
         </nav>
 
