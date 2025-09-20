@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,db } from "../../firebase.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { doc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
 export function Register() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const  [formData, setFormData] = useState({
   nombres: "",
   apellidos: "",
@@ -67,7 +69,7 @@ export function Register() {
     }catch(error){
       console.log(error);
       if(error.code === "auth/email-already-in-use"){
-        swal.fire("El correo ya está en uso","","error");
+        Swal.fire("El correo ya está en uso","","error");
     }
   }
 }
@@ -120,10 +122,11 @@ export function Register() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Contraseña</label>
+                <label className="form-label">Contraseña</label>
+                <div className="input-group">
                   <input
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     className="form-control"
                     id="password"
                     required
@@ -131,7 +134,15 @@ export function Register() {
                     value={formData.password}
                     onChange={handleChange}
                   />
+                  <button
+                    className="btn btn-outline-secondary"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
+              </div>
                 <div className="mb-3">
                   <label className="form-label">Confirmar contraseña</label>
                   <input
