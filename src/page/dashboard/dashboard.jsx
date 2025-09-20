@@ -1,31 +1,32 @@
-import { Link } from "react-router";
+import { useState } from "react";
 
 import { DashboardMenu } from "./menu";
 import { DashboardOverview } from "./overview";
 import { CustomNavbar } from "./navbar";
 
 export function Dashboard() {
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
   return (
     <>
-      <CustomNavbar />
-      <div className="min-vh-100">
-        <nav className="navbar navbar-expand-sm">
-          <div className="container-fluid">
-            <Link className="navbar-brand text-primary" to="/">
-              Dashboard
-            </Link>
-            <Link to="/login" className="btn btn-outline-dark">
-              Logout
-            </Link>
-          </div>
-        </nav>
-
+      <div className="vh-100">
+        <CustomNavbar toggleSidebar={toggleSidebar} />
         <div className="d-flex align-self-stretch">
-          <div className="px-2">
-            <DashboardMenu className></DashboardMenu>
+          <div 
+            style={{ 
+              width: sidebarVisible ? '250px' : '0px',
+              transition: 'width 0.3s ease-in-out',
+              overflow: 'hidden'
+            }}
+          >
+            <DashboardMenu isVisible={sidebarVisible} />
           </div>
 
-          <div className="container my-3">
+          <div className="flex-fill my-3 mx-3">
             <DashboardOverview></DashboardOverview>
           </div>
         </div>
