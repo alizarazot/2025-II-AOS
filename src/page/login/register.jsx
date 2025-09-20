@@ -89,7 +89,7 @@ export function Register() {
                   >
                     <option value="">Selecciona tu sexo</option>
                     <option value="Masculino">Masculino</option>
-                    <option value="Negativo">Negativo</option>
+                    <option value="Femenino">Femenino</option>
                   </select>
                 </div>
                 <button type="submit" className="btn btn-primary w-100 mb-2">

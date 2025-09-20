@@ -1,4 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 export function Login() {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/dashboard");
+  };
+
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="row justify-content-center ">
@@ -12,7 +21,7 @@ export function Login() {
                   className="img-fluid rounded-circle w-25 mt-3 mb-3"
                 />
               </div>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label"><i className="bi bi-person me-2"></i>Correo electrónico</label>
                   <input
