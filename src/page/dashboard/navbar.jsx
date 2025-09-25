@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import {
   FaBars,
@@ -7,7 +8,11 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
+import { auth } from "../../firebase";
+
 export const CustomNavbar = ({ toggleSidebar }) => {
+  const navigate = useNavigate();
+
   return (
     <Navbar bg="primary" variant="dark" className="px-3 py-3  fw-bold">
       <Navbar.Brand href="#" className="d-flex align-items-center ">
@@ -32,7 +37,12 @@ export const CustomNavbar = ({ toggleSidebar }) => {
           <Nav.Link href="#">
             <FaUser />
           </Nav.Link>
-          <Nav.Link href="/">
+          <Nav.Link
+            onClick={(_) => {
+              auth.signOut();
+              navigate("/");
+            }}
+          >
             <FaSignOutAlt />
           </Nav.Link>
         </Nav>

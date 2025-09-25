@@ -1,12 +1,28 @@
+import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
+import { auth, signInWithEmailAndPassword } from "../../firebase";
 
 export function Login() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/dashboard");
-  };
+  function handleLogin(formData) {
+    const email = formData.get("email");
+    const password = formData.get("password");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((_) => {
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        // TODO: Use the other library.
+        window.alert(error.message);
+      });
+  }
+
+  auth.onAuthStateChanged((user) => {
+    if (user) navigate("/dashboard");
+  });
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
@@ -21,15 +37,15 @@ export function Login() {
                   className="img-fluid rounded-circle w-25 mt-3 mb-3"
                 />
               </div>
-              <form onSubmit={handleSubmit}>
+              <form action={handleLogin}>
                 <div className="mb-3">
                   <label className="form-label">
                     <i className="bi bi-person me-2"></i>Correo electrónico
                   </label>
                   <input
+                    name="email"
                     type="email"
                     className="form-control"
-                    id="email"
                     required
                     placeholder="Ingresa tu correo electrónico"
                   />
@@ -39,9 +55,9 @@ export function Login() {
                     <i className="bi bi-lock me-2"></i>Contraseña
                   </label>
                   <input
+                    name="password"
                     type="password"
                     className="form-control"
-                    id="password"
                     required
                     placeholder="Ingresa tu contraseña"
                   />
