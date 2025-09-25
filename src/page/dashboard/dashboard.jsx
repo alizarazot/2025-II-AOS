@@ -16,11 +16,11 @@ export function Dashboard() {
       <div className="vh-100">
         <CustomNavbar toggleSidebar={toggleSidebar} />
         <div className="d-flex align-self-stretch">
-          <div 
-            style={{ 
-              width: sidebarVisible ? '250px' : '0px',
-              transition: 'width 0.3s ease-in-out',
-              overflow: 'hidden'
+          <div
+            style={{
+              width: sidebarVisible ? "250px" : "0px",
+              transition: "width 0.3s ease-in-out",
+              overflow: "hidden",
             }}
           >
             <DashboardMenu isVisible={sidebarVisible} />

@@ -1,12 +1,21 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { FaBars, FaEnvelope, FaBell, FaUser, FaSignOutAlt } from "react-icons/fa";
-
+import {
+  FaBars,
+  FaEnvelope,
+  FaBell,
+  FaUser,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 export const CustomNavbar = ({ toggleSidebar }) => {
   return (
     <Navbar bg="primary" variant="dark" className="px-3 py-3  fw-bold">
       <Navbar.Brand href="#" className="d-flex align-items-center ">
-        <FaBars className="me-2" style={{ cursor: "pointer" }} onClick={toggleSidebar} />
+        <FaBars
+          className="me-2"
+          style={{ cursor: "pointer" }}
+          onClick={toggleSidebar}
+        />
         <div className="ms-3">DASHBOARD</div>
       </Navbar.Brand>
 

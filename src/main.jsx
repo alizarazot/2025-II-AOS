@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router"; 
+import { BrowserRouter, Routes, Route } from "react-router";
 
 import { Login } from "./page/login/login.jsx";
 import { Dashboard } from "./page/dashboard/dashboard.jsx";
@@ -17,5 +17,5 @@ createRoot(document.getElementById("root")).render(
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

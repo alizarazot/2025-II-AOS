@@ -12,7 +12,7 @@ export function Login() {
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="row justify-content-center ">
         <div>
-             <div className="card shadow p-3" style={{ width: "370px" }}>
+          <div className="card shadow p-3" style={{ width: "370px" }}>
             <div className="card-body">
               <div className="text-center mb-4">
                 <img
@@ -23,7 +23,9 @@ export function Login() {
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label className="form-label"><i className="bi bi-person me-2"></i>Correo electrónico</label>
+                  <label className="form-label">
+                    <i className="bi bi-person me-2"></i>Correo electrónico
+                  </label>
                   <input
                     type="email"
                     className="form-control"
@@ -33,7 +35,9 @@ export function Login() {
                   />
                 </div>
                 <div className="mb-3">
-                    <label className="form-label"><i className="bi bi-lock me-2"></i>Contraseña</label>
+                  <label className="form-label">
+                    <i className="bi bi-lock me-2"></i>Contraseña
+                  </label>
                   <input
                     type="password"
                     className="form-control"

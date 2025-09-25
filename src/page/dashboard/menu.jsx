@@ -1,12 +1,18 @@
-import { FaHome, FaChartBar, FaCog, FaPalette, FaEllipsisH } from "react-icons/fa";
+import {
+  FaHome,
+  FaChartBar,
+  FaCog,
+  FaPalette,
+  FaEllipsisH,
+} from "react-icons/fa";
 
 export function DashboardMenu({ isVisible }) {
   return (
-    <div 
-      className="bg-white h-100" 
-      style={{ 
+    <div
+      className="bg-white h-100"
+      style={{
         width: "250px",
-        minWidth: "250px"
+        minWidth: "250px",
       }}
     >
       <div className="p-3">
@@ -33,13 +39,19 @@ export function DashboardMenu({ isVisible }) {
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaChartBar className="me-2" />
                       Brian Matheo
                     </a>
                   </li>
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaChartBar className="me-2" />
                       BMAP
                     </a>
@@ -71,13 +83,19 @@ export function DashboardMenu({ isVisible }) {
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaPalette className="me-2" />
                       Toggle theme
                     </a>
                   </li>
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaEllipsisH className="me-2" />
                       More settings
                     </a>
