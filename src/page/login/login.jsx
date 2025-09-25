@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import { auth, signInWithEmailAndPassword } from "../../firebase";
 
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+
 export function Login() {
   const navigate = useNavigate();
 
@@ -20,9 +23,25 @@ export function Login() {
       });
   }
 
+  const [isLoading, setIsLoading] = useState(true);
   auth.onAuthStateChanged((user) => {
-    if (user) navigate("/dashboard");
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      setIsLoading(false);
+    }
   });
+
+  if (isLoading) {
+    return (
+      <Container
+        fluid
+        className="d-grid justify-content-center align-items-center vh-100"
+      >
+        <Spinner />
+      </Container>
+    );
+  }
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
