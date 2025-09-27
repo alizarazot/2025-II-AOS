@@ -54,7 +54,7 @@ export function Login() {
               <div className="card-body">
                 <div className="text-center mb-4">
                   <img
-                    src="src/img/icon-login.png"
+                    src="src/assets/icon-login.png"
                     alt="login"
                     className="img-fluid rounded-circle w-25 mt-3 mb-3"
                   />
