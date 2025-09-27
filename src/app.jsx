@@ -13,8 +13,7 @@ import { Reset } from "./page/login/reset.jsx";
 import { ProtectedRoute } from "./component/protected-route.jsx";
 
 export const routes = (
-
-<BrowserRouter>
+  <BrowserRouter>
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" />} />
       <Route path="/login" element={<Login />} />
@@ -31,4 +30,4 @@ export const routes = (
       <Route path="/reset" element={<Reset />} />
     </Routes>
   </BrowserRouter>
-)
+);
