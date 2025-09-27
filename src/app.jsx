@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,6 +9,7 @@ import { Register } from "./page/login/register.jsx";
 import { Reset } from "./page/login/reset.jsx";
 
 import { ProtectedRoute } from "./component/protected-route.jsx";
+import { ClientManagement } from "./component/client-management/client-management.jsx";
 
 export const routes = (
   <BrowserRouter>
@@ -21,11 +20,15 @@ export const routes = (
         path="/dashboard"
         element={
           <ProtectedRoute>
-            {" "}
-            <Dashboard />{" "}
+            <Dashboard />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route
+          path="clients"
+          element={<ClientManagement></ClientManagement>}
+        ></Route>
+      </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
     </Routes>

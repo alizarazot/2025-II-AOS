@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-import { DashboardMenu } from "../../component/menu";
-import { DashboardOverview } from "../../component/overview";
-import { CustomNavbar } from "../../component/navbar";
+import { Outlet } from "react-router";
 
-import { auth } from "../../firebase";
+import { DashboardMenu } from "../../component/menu";
+import { CustomNavbar } from "../../component/navbar";
 
 export function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -28,7 +27,7 @@ export function Dashboard() {
           </div>
 
           <div className="flex-fill my-3 mx-3">
-            <DashboardOverview></DashboardOverview>
+            <Outlet></Outlet>
           </div>
         </div>
       </div>

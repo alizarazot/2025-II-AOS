@@ -1,10 +1,11 @@
 import {
   FaHome,
-  FaChartBar,
+  FaPeopleArrows,
   FaCog,
   FaPalette,
   FaEllipsisH,
 } from "react-icons/fa";
+import { NavLink } from "react-router";
 
 export function DashboardMenu({ isVisible }) {
   return (
@@ -28,7 +29,7 @@ export function DashboardMenu({ isVisible }) {
                 aria-controls="home-collapse"
               >
                 <FaHome className="me-2" />
-                Home
+                Places
               </button>
             </h2>
             <div
@@ -39,22 +40,16 @@ export function DashboardMenu({ isVisible }) {
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a
-                      href="#"
-                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    <NavLink
+                      to="clients"
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
                     >
-                      <FaChartBar className="me-2" />
-                      Brian Matheo
-                    </a>
-                  </li>
-                  <li className="mb-2">
-                    <a
-                      href="#"
-                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
-                    >
-                      <FaChartBar className="me-2" />
-                      BMAP
-                    </a>
+                      <FaPeopleArrows className="me-2" />
+                      Clients
+                    </NavLink>
                   </li>
                 </ul>
               </div>
