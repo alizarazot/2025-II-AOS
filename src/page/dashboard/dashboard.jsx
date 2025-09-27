@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { DashboardMenu } from "./menu";
-import { DashboardOverview } from "./overview";
-import { CustomNavbar } from "./navbar";
+import { DashboardMenu } from "../../component/menu";
+import { DashboardOverview } from "../../component/overview";
+import { CustomNavbar } from "../../component/navbar";
 
 import { auth } from "../../firebase";
 
