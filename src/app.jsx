@@ -14,13 +14,14 @@ import { ClientManagement } from "./component/client-management/client-managemen
 export const routes = (
   <BrowserRouter>
     <Routes>
+      {/* Redirect '/' to '/dashboard' */}
       <Route path="/" element={<Navigate to="/dashboard" />} />
-      <Route path="/login" element={<Login />} />
+
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Dashboard></Dashboard>
           </ProtectedRoute>
         }
       >
@@ -29,6 +30,9 @@ export const routes = (
           element={<ClientManagement></ClientManagement>}
         ></Route>
       </Route>
+
+      <Route path="/login" element={<Login />} />
+      {/* TODO: Redirect to dashboard if logged in.  */}
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
     </Routes>

@@ -5,6 +5,7 @@ import {
   FaPalette,
   FaEllipsisH,
 } from "react-icons/fa";
+
 import { NavLink } from "react-router";
 
 export function DashboardMenu({ isVisible }) {
@@ -21,11 +22,11 @@ export function DashboardMenu({ isVisible }) {
           <div className="accordion-item border-0">
             <h2 className="accordion-header">
               <button
-                className="accordion-button collapsed bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
+                className="accordion-button bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#home-collapse"
-                aria-expanded="false"
+                aria-expanded="true"
                 aria-controls="home-collapse"
               >
                 <FaHome className="me-2" />
@@ -34,14 +35,28 @@ export function DashboardMenu({ isVisible }) {
             </h2>
             <div
               id="home-collapse"
-              className="accordion-collapse collapse"
+              className="accordion-collapse"
               data-bs-parent="#sidebar-accordion"
             >
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
                     <NavLink
-                      to="clients"
+                      to="/dashboard"
+                      end
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaHome className="me-2" />
+                      Home
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/clients"
+                      end
                       className={({ isActive }) =>
                         "text-decoration-none text-dark d-block p-2 rounded" +
                         (isActive ? " bg-secondary-subtle" : "")
