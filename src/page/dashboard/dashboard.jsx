@@ -4,9 +4,10 @@ import { DashboardMenu } from "./menu";
 import { DashboardOverview } from "./overview";
 import { CustomNavbar } from "./navbar";
 
+import { auth } from "../../firebase";
+
 export function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
-
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
