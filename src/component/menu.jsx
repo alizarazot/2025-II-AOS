@@ -35,7 +35,7 @@ export function DashboardMenu({ isVisible }) {
             </h2>
             <div
               id="home-collapse"
-              className="accordion-collapse"
+              className="accordion-collapse collapse show"
               data-bs-parent="#sidebar-accordion"
             >
               <div className="accordion-body px-0 py-2">
