@@ -5,6 +5,7 @@ import { DashboardOverview } from "../../component/overview";
 import { CustomNavbar } from "../../component/navbar";
 
 import { auth } from "../../firebase";
+import { Outlet } from "react-router-dom";
 
 export function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -28,11 +29,10 @@ export function Dashboard() {
           </div>
 
           <div className="flex-fill my-3 mx-3">
-            <DashboardOverview></DashboardOverview>
+            <Outlet></Outlet>
           </div>
         </div>
       </div>
-
       <footer className="container-fluid py-5 bg-info-subtle text-center">
         <p>
           This is free and unencumbered software released into the public

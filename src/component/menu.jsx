@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import {
   FaHome,
   FaChartBar,
@@ -39,13 +41,12 @@ export function DashboardMenu({ isVisible }) {
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a
-                      href="#"
+                    <NavLink to="/dashboard/products"
                       className="text-decoration-none text-dark d-block py-2 px-2 rounded"
                     >
                       <FaChartBar className="me-2" />
-                      Brian Matheo
-                    </a>
+                      Productos
+                    </NavLink>
                   </li>
                   <li className="mb-2">
                     <a
