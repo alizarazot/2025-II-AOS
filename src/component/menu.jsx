@@ -6,6 +6,7 @@ import {
   FaCog,
   FaPalette,
   FaEllipsisH,
+  FaTruck,
 } from "react-icons/fa";
 
 export function DashboardMenu({ isVisible }) {
@@ -49,13 +50,12 @@ export function DashboardMenu({ isVisible }) {
                     </NavLink>
                   </li>
                   <li className="mb-2">
-                    <a
-                      href="#"
+                    <NavLink to="/dashboard/providers"
                       className="text-decoration-none text-dark d-block py-2 px-2 rounded"
                     >
-                      <FaChartBar className="me-2" />
-                      BMAP
-                    </a>
+                      <FaTruck className="me-2" />
+                      Proveedores
+                    </NavLink>
                   </li>
                 </ul>
               </div>

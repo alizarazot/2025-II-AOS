@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { getProducts, addProduct, updateProduct, deleteProduct } from "./products-service/products-service";
 
@@ -164,7 +164,7 @@ export function Products() {
                     name="Name"
                     value={form.Name}
                     onChange={onChange}
-                    placeholder="Ej. Hamburguesa Clásica"
+                    placeholder="Ej. Camiseta Azul"
                     required
                   />
                 </div>
@@ -233,9 +233,10 @@ export function Products() {
         </div>
       )}
 
-      {/* Tabla */}
-      <div className="card">
-        <div className="card-body p-0">
+      {/* Tabla - Solo se muestra cuando NO está en modo edición */}
+      {!showForm && (
+        <div className="card">
+          <div className="card-body p-0">
           {loading && products.length === 0 ? (
             <div className="p-4 text-center text-muted">Cargando...</div>
           ) : (
@@ -294,7 +295,8 @@ export function Products() {
             </div>
           )}
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

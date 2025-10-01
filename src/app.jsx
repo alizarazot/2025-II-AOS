@@ -10,6 +10,7 @@ import { Reset } from "./page/login/reset.jsx";
 
 import { ProtectedRoute } from "./component/protected-route.jsx";
 import { Products } from "./component/products-management/products-management.jsx";
+import { Providers } from "./component/providers-management/providers-management.jsx";
 
 export const routes = (
 
@@ -27,6 +28,7 @@ export const routes = (
         }
       >
         <Route path="products" element={<Products></Products>}></Route>
+        <Route path="providers" element={<Providers></Providers>}></Route>
         </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
