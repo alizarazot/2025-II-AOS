@@ -1,6 +1,10 @@
+import { useState } from "react";
+
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
+import { ClientManagementForm } from "./form.jsx";
 import { Row } from "./row.jsx";
 
 const sampleData = [
@@ -34,10 +38,22 @@ const sampleData = [
 ];
 
 export function ClientManagement() {
+  const [showModal, setShowModal] = useState(false);
+  const [currentData, setCurrentData] = useState({});
+
   return (
     <>
       <h2>Clients</h2>
-      <Button className="mt-2 mb-4">Add new client</Button>
+
+      <Button
+        onClick={(_) => {
+          setShowModal(true);
+        }}
+        className="mt-2 mb-4"
+      >
+        Add new client
+      </Button>
+
       <Table bordered hover responsive className="align-middle">
         <thead>
           <tr>
@@ -56,6 +72,47 @@ export function ClientManagement() {
           ))}
         </tbody>
       </Table>
+
+      <Modal
+        centered
+        backdrop="static"
+        show={showModal}
+        onHide={(_) => {
+          setShowModal(false);
+        }}
+      >
+        <Modal.Header>
+          <Modal.Title>Add client</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ClientManagementForm
+            onUpdateField={(field, value) => {
+              const newData = currentData;
+              newData[field] = value;
+              setCurrentData(newData);
+            }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={(_) => {
+              setShowModal(false);
+            }}
+            variant="secondary"
+          >
+            Close
+          </Button>
+          <Button
+            onClick={(_) => {
+              setShowModal(false);
+              sampleData.push(currentData);
+            }}
+            variant="primary"
+          >
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
