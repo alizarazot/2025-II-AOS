@@ -4,46 +4,39 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
+
+import { db } from "../../firebase";
+
 import { ClientManagementForm } from "./form.jsx";
 import { Row } from "./row.jsx";
-
-const sampleData = [
-  {
-    id: 0,
-    name: "Sofia",
-    uid: "3453405304",
-    phone: "123 45 575",
-    address: "Bulgaria",
-    picture:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 1,
-    name: "Rocky",
-    uid: "D-235325",
-    phone: "434 23 5646",
-    address: "Here",
-    picture:
-      "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRvZ3xlbnwwfHwwfHx8MA%3D%3D",
-  },
-  {
-    id: 2,
-    name: "Derek",
-    uid: "5645673735",
-    phone: "675 345 23",
-    address: "Mars",
-    picture:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVufGVufDB8fDB8fHww",
-  },
-];
 
 const emptyData = { name: "", uid: "", phone: "", address: "", picture: null };
 
 export function ClientManagement() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const [templateData, setTemplateData] = useState(emptyData);
   const [currentData, setCurrentData] = useState(emptyData);
-  const [datalist, setDatalist] = useState(sampleData);
+  const [datalist, setDatalist] = useState([]);
   const [currentId, setCurrentId] = useState(-1);
+
+  getDocs(collection(db, "clients")).then((data) => {
+    const remoteData = [];
+    data.forEach((data) => remoteData.push({ ...data.data(), id: data.id }));
+    setDatalist(remoteData);
+    setIsLoading(false);
+  });
+
+  if (isLoading) {
+    return <span> Loading... </span>;
+  }
 
   return (
     <>
@@ -54,7 +47,7 @@ export function ClientManagement() {
           let max = 0;
           for (let data of datalist) {
             if (data.id >= max) {
-              max = data.id + 1;
+              max = parseInt(data.id, 10) + 1;
             }
           }
           setCurrentId(max);
@@ -89,6 +82,7 @@ export function ClientManagement() {
               }}
               onDelete={(id) => {
                 setDatalist(datalist.filter((data) => data.id != id));
+                deleteDoc(doc(db, "clients", id.toString()));
               }}
             ></Row>
           ))}
@@ -135,12 +129,13 @@ export function ClientManagement() {
                 }
               }
 
+              const obj = { ...currentData, id: currentId };
               if (idx >= 0) {
-                setDatalist(
-                  datalist.with(idx, { ...currentData, id: currentId }),
-                );
+                setDatalist(datalist.with(idx, obj));
+                setDoc(doc(db, "clients", currentId.toString()), currentData);
               } else {
-                setDatalist([...datalist, { ...currentData, id: currentId }]);
+                setDatalist([...datalist, obj]);
+                setDoc(doc(db, "clients", currentId.toString()), currentData);
               }
 
               setCurrentId(-1);
