@@ -17,7 +17,13 @@ import { db } from "../../firebase";
 import { ClientManagementForm } from "./form.jsx";
 import { Row } from "./row.jsx";
 
-const emptyData = { name: "", uid: "", phone: "", address: "", picture: null };
+const emptyData = {
+  name: "",
+  uid: "",
+  phone: "",
+  address: "",
+  picture: "/src/assets/icon-login.png",
+};
 
 export function ClientManagement() {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +56,8 @@ export function ClientManagement() {
               max = parseInt(data.id, 10) + 1;
             }
           }
+          setTemplateData(emptyData);
+          setCurrentData(emptyData);
           setCurrentId(max);
         }}
         className="mt-2 mb-4"

@@ -1,15 +1,19 @@
 import { useState } from "react";
 
 import Form from "react-bootstrap/Form";
+import Image from "react-bootstrap/Image";
 
 export function ClientManagementForm({ templateData, onUpdateField }) {
   const [data, setData] = useState(templateData);
 
   return (
-    <Form>
+    <Form className="fluid mx-auto">
       <div className="d-flex">
-        <div>
-          <Form.Group>
+        <div
+          className="d-flex flex-column flex-grow-1 mb-2"
+          style={{ flexBasis: 1 }}
+        >
+          <Form.Group className="mb-2">
             <Form.Label> Name </Form.Label>
             <Form.Control
               value={data.name}
@@ -18,7 +22,7 @@ export function ClientManagementForm({ templateData, onUpdateField }) {
                 onUpdateField("name", e.target.value);
               }}
               type="text"
-              placeholder="John Doe"
+              placeholder="Your name here"
             />
           </Form.Group>
           <Form.Group>
@@ -30,15 +34,22 @@ export function ClientManagementForm({ templateData, onUpdateField }) {
                 onUpdateField("uid", e.target.value);
               }}
               type="text"
-              placeholder="345324235"
+              placeholder="Without dots or commas"
             />
           </Form.Group>
         </div>
-        <h1>nr</h1>
+        <div className="flex-grow-1" style={{ flexBasis: 1 }}>
+          <Image
+            thumbnail
+            className="img-fluid d-block mx-auto"
+            style={{ height: 147, width: 147, objectFit: "cover" }}
+            src={data.picture}
+          />
+        </div>
       </div>
 
       <div className="d-flex">
-        <Form.Group>
+        <Form.Group className="me-1 flex-grow-1">
           <Form.Label> Phone number </Form.Label>
           <Form.Control
             value={data.phone}
@@ -47,9 +58,10 @@ export function ClientManagementForm({ templateData, onUpdateField }) {
               onUpdateField("phone", e.target.value);
             }}
             type="tel"
+            placeholder="Without spaces"
           />
         </Form.Group>
-        <Form.Group>
+        <Form.Group className="ms-1 flex-grow-1">
           <Form.Label> Address </Form.Label>
           <Form.Control
             value={data.address}
@@ -58,7 +70,7 @@ export function ClientManagementForm({ templateData, onUpdateField }) {
               onUpdateField("address", e.target.value);
             }}
             type="text"
-            placeholder="Sofia, Bulgaria"
+            placeholder="Like 'Sofia, Bulgaria'"
           />
         </Form.Group>
       </div>
