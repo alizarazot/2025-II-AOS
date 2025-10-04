@@ -37,9 +37,13 @@ const sampleData = [
   },
 ];
 
+const emptyData = { name: "", uid: "", phone: "", address: "", picture: null };
+
 export function ClientManagement() {
-  const [showModal, setShowModal] = useState(false);
-  const [currentData, setCurrentData] = useState({});
+  const [templateData, setTemplateData] = useState(emptyData);
+  const [currentData, setCurrentData] = useState(emptyData);
+  const [datalist, setDatalist] = useState(sampleData);
+  const [currentId, setCurrentId] = useState(-1);
 
   return (
     <>
@@ -47,7 +51,13 @@ export function ClientManagement() {
 
       <Button
         onClick={(_) => {
-          setShowModal(true);
+          let max = 0;
+          for (let data of datalist) {
+            if (data.id >= max) {
+              max = data.id + 1;
+            }
+          }
+          setCurrentId(max);
         }}
         className="mt-2 mb-4"
       >
@@ -67,8 +77,20 @@ export function ClientManagement() {
           </tr>
         </thead>
         <tbody className="table-group-divider">
-          {sampleData.map((data) => (
-            <Row data={data}></Row>
+          {datalist.map((data) => (
+            <Row
+              key={data.id}
+              data={data}
+              onEdit={(id) => {
+                const tmpl = datalist.find((data) => data.id === id);
+                setTemplateData(tmpl);
+                setCurrentData(tmpl);
+                setCurrentId(id);
+              }}
+              onDelete={(id) => {
+                setDatalist(datalist.filter((data) => data.id != id));
+              }}
+            ></Row>
           ))}
         </tbody>
       </Table>
@@ -76,9 +98,9 @@ export function ClientManagement() {
       <Modal
         centered
         backdrop="static"
-        show={showModal}
+        show={currentId >= 0}
         onHide={(_) => {
-          setShowModal(false);
+          setCurrentId(-1);
         }}
       >
         <Modal.Header>
@@ -86,17 +108,18 @@ export function ClientManagement() {
         </Modal.Header>
         <Modal.Body>
           <ClientManagementForm
+            templateData={templateData}
             onUpdateField={(field, value) => {
-              const newData = currentData;
-              newData[field] = value;
-              setCurrentData(newData);
+              const obj = { ...currentData };
+              obj[field] = value;
+              setCurrentData(obj);
             }}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button
             onClick={(_) => {
-              setShowModal(false);
+              setCurrentId(-1);
             }}
             variant="secondary"
           >
@@ -104,12 +127,27 @@ export function ClientManagement() {
           </Button>
           <Button
             onClick={(_) => {
-              setShowModal(false);
-              sampleData.push(currentData);
+              let idx = -1;
+              for (let i = 0; i < datalist.length; i++) {
+                if (datalist[i].id === currentId) {
+                  idx = i;
+                  break;
+                }
+              }
+
+              if (idx >= 0) {
+                setDatalist(
+                  datalist.with(idx, { ...currentData, id: currentId }),
+                );
+              } else {
+                setDatalist([...datalist, { ...currentData, id: currentId }]);
+              }
+
+              setCurrentId(-1);
             }}
             variant="primary"
           >
-            Add
+            {datalist.find((data) => data.id === currentId) ? "Update" : "Add"}
           </Button>
         </Modal.Footer>
       </Modal>

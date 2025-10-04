@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 
-export function Row({ data }) {
+export function Row({ data, onEdit, onDelete }) {
   return (
     <tr>
       <th scope="row">{data.id}</th>
@@ -16,10 +16,23 @@ export function Row({ data }) {
       <td>{data.phone}</td>
       <td>{data.address}</td>
       <td>
-        <Button variant="secondary" className="me-2">
+        <Button
+          onClick={(_) => {
+            onEdit(data.id);
+          }}
+          variant="secondary"
+          className="me-2"
+        >
           Edit
         </Button>
-        <Button variant="danger">Delete</Button>
+        <Button
+          onClick={(_) => {
+            onDelete(data.id);
+          }}
+          variant="danger"
+        >
+          Delete
+        </Button>
       </td>
     </tr>
   );
