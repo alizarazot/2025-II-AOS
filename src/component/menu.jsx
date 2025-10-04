@@ -1,12 +1,14 @@
+import { NavLink } from "react-router";
+
 import {
+  FaChartBar,
   FaHome,
   FaPeopleArrows,
   FaCog,
   FaPalette,
   FaEllipsisH,
+  FaTruck,
 } from "react-icons/fa";
-
-import { NavLink } from "react-router";
 
 export function DashboardMenu({ isVisible }) {
   return (
@@ -64,6 +66,24 @@ export function DashboardMenu({ isVisible }) {
                     >
                       <FaPeopleArrows className="me-2" />
                       Clients
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/products"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
+                      <FaChartBar className="me-2" />
+                      Productos
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/providers"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
+                      <FaTruck className="me-2" />
+                      Proveedores
                     </NavLink>
                   </li>
                 </ul>
