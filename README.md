@@ -19,19 +19,27 @@ Este proyecto implementa una aplicación con arquitectura orientada a servicios 
 
 ## 🏗️ Estructura del proyecto
 
-/
-├── src/
-│ └── … (código principal: componentes, servicios, páginas, etc.)
-├── index.html
-├── package.json
-├── package-lock.json
-├── vite.config.js
-├── eslint.config.js
-├── .gitignore
-├── .envrc
-├── flake.nix
-├── flake.lock
-└── README.md
+```
+src
+├── app.jsx # Contiene las rutas.
+├── assets # Imágenes estáticas.
+├── component # Componentes reutilizables.
+│   ├── client-management/
+│   ├── products-management/
+│   └── providers-management/
+│   ├── menu.jsx
+│   ├── navbar.jsx
+│   ├── overview.jsx
+│   ├── protected-route.jsx
+├── firebase.js # Configuración de Firebase.
+├── main.jsx # Contiene punto de entrada principal.
+└── page
+    ├── dashboard/
+    └── login/
+        ├── login.jsx
+        ├── register.jsx
+        └── reset.jsx
+```
 
 ## Dependencias o paquetes
 
