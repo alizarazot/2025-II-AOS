@@ -1,12 +1,22 @@
-import { FaHome, FaChartBar, FaCog, FaPalette, FaEllipsisH } from "react-icons/fa";
+import { NavLink } from "react-router";
+
+import {
+  FaChartBar,
+  FaHome,
+  FaPeopleArrows,
+  FaCog,
+  FaPalette,
+  FaEllipsisH,
+  FaTruck,
+} from "react-icons/fa";
 
 export function DashboardMenu({ isVisible }) {
   return (
-    <div 
-      className="bg-white h-100" 
-      style={{ 
+    <div
+      className="bg-white h-100"
+      style={{
         width: "250px",
-        minWidth: "250px"
+        minWidth: "250px",
       }}
     >
       <div className="p-3">
@@ -14,35 +24,67 @@ export function DashboardMenu({ isVisible }) {
           <div className="accordion-item border-0">
             <h2 className="accordion-header">
               <button
-                className="accordion-button collapsed bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
+                className="accordion-button bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#home-collapse"
-                aria-expanded="false"
+                aria-expanded="true"
                 aria-controls="home-collapse"
               >
                 <FaHome className="me-2" />
-                Home
+                Places
               </button>
             </h2>
             <div
               id="home-collapse"
-              className="accordion-collapse collapse"
+              className="accordion-collapse collapse show"
               data-bs-parent="#sidebar-accordion"
             >
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
-                      <FaChartBar className="me-2" />
-                      Brian Matheo
-                    </a>
+                    <NavLink
+                      to="/dashboard"
+                      end
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaHome className="me-2" />
+                      Home
+                    </NavLink>
                   </li>
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <NavLink
+                      to="/dashboard/clients"
+                      end
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaPeopleArrows className="me-2" />
+                      Clients
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/products"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaChartBar className="me-2" />
-                      BMAP
-                    </a>
+                      Productos
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/providers"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
+                      <FaTruck className="me-2" />
+                      Proveedores
+                    </NavLink>
                   </li>
                 </ul>
               </div>
@@ -71,13 +113,19 @@ export function DashboardMenu({ isVisible }) {
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaPalette className="me-2" />
                       Toggle theme
                     </a>
                   </li>
                   <li className="mb-2">
-                    <a href="#" className="text-decoration-none text-dark d-block py-2 px-2 rounded">
+                    <a
+                      href="#"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
                       <FaEllipsisH className="me-2" />
                       More settings
                     </a>
