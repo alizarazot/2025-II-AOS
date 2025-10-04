@@ -29,23 +29,23 @@ export const addClient = async (client) => {
 export const getClients = async () => {
   const q = query(clientsCollection, orderBy("Creation", "desc"));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 
 // READ - Obtener clientes activos únicamente
 export const getActiveClients = async () => {
   const q = query(
-    clientsCollection, 
+    clientsCollection,
     where("State", "==", "Activo"),
-    orderBy("Creation", "desc")
+    orderBy("Creation", "desc"),
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 

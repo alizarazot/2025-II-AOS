@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "./products-service/products-service";
+import {
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from "./products-service/products-service";
 
 export function Products() {
   // Datos
@@ -52,7 +57,13 @@ export function Products() {
   };
 
   const resetForm = () => {
-    setForm({ Name: "", Description: "", Price: "", Stock: "", State: "Activa" });
+    setForm({
+      Name: "",
+      Description: "",
+      Price: "",
+      Stock: "",
+      State: "Activa",
+    });
     setEditingId(null);
     setShowForm(false);
   };
@@ -60,7 +71,12 @@ export function Products() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!form.Name || !form.Description || form.Price === "" || form.Stock === "") {
+    if (
+      !form.Name ||
+      !form.Description ||
+      form.Price === "" ||
+      form.Stock === ""
+    ) {
       setError("Por favor completa todos los campos obligatorios");
       return;
     }
@@ -98,12 +114,12 @@ export function Products() {
 
   const onDelete = async (id, name) => {
     const result = await Swal.fire({
-      title: '¿Eliminar? ',
-      html: `Vas a eliminar <b>${name || 'este producto'}</b>. Esta acción no se puede deshacer.`,
-      icon: 'warning',
+      title: "¿Eliminar? ",
+      html: `Vas a eliminar <b>${name || "este producto"}</b>. Esta acción no se puede deshacer.`,
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
       reverseButtons: true,
       focusCancel: true,
     });
@@ -114,15 +130,15 @@ export function Products() {
       await deleteProduct(id);
       await loadProducts();
       await Swal.fire({
-        title: 'Eliminado',
-        text: 'El producto se eliminó correctamente',
-        icon: 'success',
+        title: "Eliminado",
+        text: "El producto se eliminó correctamente",
+        icon: "success",
         timer: 1500,
         showConfirmButton: false,
       });
     } catch (e) {
-      setError(e.message || 'No se pudo eliminar');
-      await Swal.fire('Error', e.message || 'No se pudo eliminar', 'error');
+      setError(e.message || "No se pudo eliminar");
+      await Swal.fire("Error", e.message || "No se pudo eliminar", "error");
     }
   };
 
@@ -135,7 +151,13 @@ export function Products() {
           onClick={() => {
             setShowForm(true);
             setEditingId(null);
-            setForm({ Name: "", Description: "", Price: "", Stock: "", State: "Activa" });
+            setForm({
+              Name: "",
+              Description: "",
+              Price: "",
+              Stock: "",
+              State: "Activa",
+            });
           }}
           disabled={loading}
         >
@@ -144,7 +166,10 @@ export function Products() {
       </div>
 
       {error && (
-        <div className="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+        <div
+          className="alert alert-danger d-flex justify-content-between align-items-center"
+          role="alert"
+        >
           <span>{error}</span>
           <button className="btn-close" onClick={() => setError("")} />
         </div>
@@ -154,7 +179,9 @@ export function Products() {
       {showForm && (
         <div className="card mb-3">
           <div className="card-body">
-            <h5 className="card-title mb-3">{editingId ? "Editar Producto" : "Nuevo Producto"}</h5>
+            <h5 className="card-title mb-3">
+              {editingId ? "Editar Producto" : "Nuevo Producto"}
+            </h5>
             <form onSubmit={onSubmit}>
               <div className="row g-3">
                 <div className="col-md-6">
@@ -221,10 +248,18 @@ export function Products() {
                 </div>
               </div>
               <div className="d-flex gap-2 justify-content-end mt-3">
-                <button className="btn btn-success" type="submit" disabled={loading}>
+                <button
+                  className="btn btn-success"
+                  type="submit"
+                  disabled={loading}
+                >
                   {editingId ? "Guardar Cambios" : "Crear"}
                 </button>
-                <button className="btn btn-secondary" type="button" onClick={resetForm}>
+                <button
+                  className="btn btn-secondary"
+                  type="button"
+                  onClick={resetForm}
+                >
                   Cancelar
                 </button>
               </div>
@@ -237,64 +272,82 @@ export function Products() {
       {!showForm && (
         <div className="card">
           <div className="card-body p-0">
-          {loading && products.length === 0 ? (
-            <div className="p-4 text-center text-muted">Cargando...</div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table table-hover align-middle mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">Stock</th>
-                    <th>Estado</th>
-                    <th>Creado</th>
-                    <th>Actualizado</th>
-                    <th className="text-center" style={{ width: 160 }}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.length === 0 ? (
+            {loading && products.length === 0 ? (
+              <div className="p-4 text-center text-muted">Cargando...</div>
+            ) : (
+              <div className="table-responsive">
+                <table className="table table-hover align-middle mb-0">
+                  <thead className="table-light">
                     <tr>
-                      <td className="text-center text-muted" colSpan={6}>No hay productos</td>
+                      <th>Nombre</th>
+                      <th>Descripción</th>
+                      <th className="text-end">Precio</th>
+                      <th className="text-end">Stock</th>
+                      <th>Estado</th>
+                      <th>Creado</th>
+                      <th>Actualizado</th>
+                      <th className="text-center" style={{ width: 160 }}>
+                        Acciones
+                      </th>
                     </tr>
-                  ) : (
-                    products.map((p) => (
-                      <tr key={p.id}>
-                        <td>{p.Name}</td>
-                        <td style={{ maxWidth: 320 }}>
-                          <span className="text-muted">
-                            {p.Description?.length > 80 ? `${p.Description.slice(0, 80)}…` : p.Description}
-                          </span>
-                        </td>
-                        <td className="text-end">${Number(p.Price).toLocaleString()}</td>
-                        <td className="text-end">{Number(p.Stock).toLocaleString()}</td>
-                        <td>
-                          <span className={`badge ${p.State === "Activa" ? "text-bg-success" : "text-bg-secondary"}`}>
-                            {p.State || "Inactiva"}
-                          </span>
-                        </td>
-                        <td>{p._createdAtStr || ""}</td>
-                        <td>{p._updatedAtStr || ""}</td>
-                        <td className="text-center">
-                          <div className="btn-group" role="group">
-                            <button className="btn btn-sm btn-warning" onClick={() => onEdit(p)}>
-                              ✏️ Editar
-                            </button>
-                            <button className="btn btn-sm btn-danger" onClick={() => onDelete(p.id, p.Name)}>
-                              🗑️ Eliminar
-                            </button>
-                          </div>
+                  </thead>
+                  <tbody>
+                    {products.length === 0 ? (
+                      <tr>
+                        <td className="text-center text-muted" colSpan={6}>
+                          No hay productos
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                    ) : (
+                      products.map((p) => (
+                        <tr key={p.id}>
+                          <td>{p.Name}</td>
+                          <td style={{ maxWidth: 320 }}>
+                            <span className="text-muted">
+                              {p.Description?.length > 80
+                                ? `${p.Description.slice(0, 80)}…`
+                                : p.Description}
+                            </span>
+                          </td>
+                          <td className="text-end">
+                            ${Number(p.Price).toLocaleString()}
+                          </td>
+                          <td className="text-end">
+                            {Number(p.Stock).toLocaleString()}
+                          </td>
+                          <td>
+                            <span
+                              className={`badge ${p.State === "Activa" ? "text-bg-success" : "text-bg-secondary"}`}
+                            >
+                              {p.State || "Inactiva"}
+                            </span>
+                          </td>
+                          <td>{p._createdAtStr || ""}</td>
+                          <td>{p._updatedAtStr || ""}</td>
+                          <td className="text-center">
+                            <div className="btn-group" role="group">
+                              <button
+                                className="btn btn-sm btn-warning"
+                                onClick={() => onEdit(p)}
+                              >
+                                ✏️ Editar
+                              </button>
+                              <button
+                                className="btn btn-sm btn-danger"
+                                onClick={() => onDelete(p.id, p.Name)}
+                              >
+                                🗑️ Eliminar
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

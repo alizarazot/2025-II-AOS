@@ -30,23 +30,23 @@ export const addProvider = async (provider) => {
 export const getProviders = async () => {
   const q = query(providersCollection, orderBy("Creation", "desc"));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 
 // READ - Obtener proveedores activos únicamente
 export const getActiveProviders = async () => {
   const q = query(
-    providersCollection, 
+    providersCollection,
     where("State", "==", "Activo"),
-    orderBy("Creation", "desc")
+    orderBy("Creation", "desc"),
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 
@@ -56,41 +56,38 @@ export const getProvidersByCategory = async (category) => {
     providersCollection,
     where("Category", "==", category),
     where("State", "==", "Activo"),
-    orderBy("Creation", "desc")
+    orderBy("Creation", "desc"),
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 
 // READ - Búsqueda de proveedores por nombre
 export const searchProvidersByName = async (searchTerm) => {
   const snapshot = await getDocs(providersCollection);
-  const allProviders = snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  const allProviders = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
-  
+
   // Filtrar por nombre (búsqueda case-insensitive)
-  return allProviders.filter(provider => 
-    provider.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    provider.CompanyName?.toLowerCase().includes(searchTerm.toLowerCase())
+  return allProviders.filter(
+    (provider) =>
+      provider.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      provider.CompanyName?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 };
 
 // READ - Obtener proveedores recientes (últimos 10)
 export const getRecentProviders = async () => {
-  const q = query(
-    providersCollection,
-    orderBy("Creation", "desc"),
-    limit(10)
-  );
+  const q = query(providersCollection, orderBy("Creation", "desc"), limit(10));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ 
-    id: doc.id, 
-    ...doc.data() 
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 };
 

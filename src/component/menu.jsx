@@ -1,8 +1,9 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 import {
-  FaHome,
   FaChartBar,
+  FaHome,
+  FaPeopleArrows,
   FaCog,
   FaPalette,
   FaEllipsisH,
@@ -23,26 +24,53 @@ export function DashboardMenu({ isVisible }) {
           <div className="accordion-item border-0">
             <h2 className="accordion-header">
               <button
-                className="accordion-button collapsed bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
+                className="accordion-button bg-transparent text-primary fw-bold px-0 border-0 shadow-none"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#home-collapse"
-                aria-expanded="false"
+                aria-expanded="true"
                 aria-controls="home-collapse"
               >
                 <FaHome className="me-2" />
-                Home
+                Places
               </button>
             </h2>
             <div
               id="home-collapse"
-              className="accordion-collapse collapse"
+              className="accordion-collapse collapse show"
               data-bs-parent="#sidebar-accordion"
             >
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
                   <li className="mb-2">
-                    <NavLink to="/dashboard/products"
+                    <NavLink
+                      to="/dashboard"
+                      end
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaHome className="me-2" />
+                      Home
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/clients"
+                      end
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaPeopleArrows className="me-2" />
+                      Clients
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/products"
                       className="text-decoration-none text-dark d-block py-2 px-2 rounded"
                     >
                       <FaChartBar className="me-2" />
@@ -50,7 +78,8 @@ export function DashboardMenu({ isVisible }) {
                     </NavLink>
                   </li>
                   <li className="mb-2">
-                    <NavLink to="/dashboard/providers"
+                    <NavLink
+                      to="/dashboard/providers"
                       className="text-decoration-none text-dark d-block py-2 px-2 rounded"
                     >
                       <FaTruck className="me-2" />

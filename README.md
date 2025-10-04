@@ -8,12 +8,12 @@ Este proyecto implementa una aplicación con arquitectura orientada a servicios 
 
 ## 🧰 Tecnologías usadas
 
-- JavaScript / React  
-- Firebase 
-- react-firebase-hooks  
-- Bootstrap  
-- SweetAlert2  
-- Vite  
+- JavaScript / React
+- Firebase
+- react-firebase-hooks
+- Bootstrap
+- SweetAlert2
+- Vite
 
 ---
 
