@@ -4,8 +4,13 @@ import { getAnalytics } from "firebase/analytics";
 import {
   getAuth,
   GoogleAuthProvider,
+  GithubAuthProvider,
   signOut,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -25,10 +30,34 @@ const analytics = getAnalytics(app);
 
 //variable para obtener funcionalidad de autenticacion
 const auth = getAuth();
-const Provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
+// Configurar GitHub para que SIEMPRE pida autorización y muestre con qué cuenta inicia
+githubProvider.setCustomParameters({
+  allow_signup: 'true',
+  // Esto fuerza a mostrar la pantalla de autorización
+  prompt: 'consent'
+});
+
+// Forzar selección de cuenta
+githubProvider.addScope('user:email');
 
 // conexion a db
 const db = getFirestore();
 
 //exportar variables para consumo del proyecto
-export { auth, GoogleAuthProvider, signOut, db, signInWithEmailAndPassword };
+export {
+  auth,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  googleProvider,
+  githubProvider,
+  signOut,
+  signInWithPopup,
+  db,
+  signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
+  EmailAuthProvider,
+};

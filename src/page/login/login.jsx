@@ -7,12 +7,21 @@ import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import { auth, signInWithEmailAndPassword } from "../../firebase";
+import {
+  auth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  githubProvider,
+  linkWithCredential,
+
+} from "../../firebase";
 
 export function Login() {
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState(null);
+  const [linkAccountData, setLinkAccountData] = useState(null);
+  
   function handleLogin(formData) {
     const email = formData.get("email");
     const password = formData.get("password");
@@ -22,6 +31,49 @@ export function Login() {
       })
       .catch((error) => {
         setErrorMessage(error.message);
+      });
+  }
+
+  function handleGithubLogin() {
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        // Usuario autenticado con éxito
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        // Manejar el caso de cuenta existente con diferente credencial
+        if (error.code === "auth/account-exists-with-different-credential") {
+          const email = error.customData.email;
+          const credential = error.credential;
+          
+          // Guardar información para vincular después
+          setLinkAccountData({
+            email: email,
+            credential: credential
+          });
+        } else {
+          setErrorMessage(error.message);
+        }
+      });
+  }
+
+  function handleLinkAccounts(password) {
+    if (!linkAccountData) return;
+    
+    // Iniciar sesión con email/password
+    signInWithEmailAndPassword(auth, linkAccountData.email, password)
+      .then((userCredential) => {
+        // Vincular con GitHub
+        return linkWithCredential(userCredential.user, linkAccountData.credential);
+      })
+      .then(() => {
+        // Vinculación exitosa
+        setLinkAccountData(null);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+        setLinkAccountData(null);
       });
   }
 
@@ -92,6 +144,20 @@ export function Login() {
                   <button type="submit" className="btn btn-primary w-100 mb-2">
                     Iniciar sesión
                   </button>
+                  
+                  <div className="text-center my-3">
+                    <span className="text-muted">o</span>
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={handleGithubLogin}
+                    className="btn btn-dark w-100 mb-2"
+                  >
+                    <i className="bi bi-github me-2"></i>
+                    Iniciar sesión con GitHub
+                  </button>
+                  
                   <div className="text-center mt-2 mb-2">
                     <span>¿No tienes una cuenta? </span>
                     <a href="/register">Regístrate</a>
@@ -108,6 +174,11 @@ export function Login() {
           setErrorMessage(null);
         }}
       ></ModalError>
+      <ModalLinkAccount
+        data={linkAccountData}
+        onLink={handleLinkAccounts}
+        onCancel={() => setLinkAccountData(null)}
+      ></ModalLinkAccount>
       ;
     </>
   );
@@ -143,6 +214,75 @@ function ModalError({ message, clear }) {
             Ok
           </Button>
         </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+function ModalLinkAccount({ data, onLink, onCancel }) {
+  const [show, setShow] = useState(false);
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    setShow(data != null);
+    setPassword("");
+  }, [data]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onLink(password);
+  };
+
+  return (
+    <>
+      <Modal
+        show={show}
+        onHide={() => {
+          setShow(false);
+          onCancel();
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Vincular cuentas</Modal.Title>
+        </Modal.Header>
+        <form onSubmit={handleSubmit}>
+          <Modal.Body>
+            <p>
+              Ya existe una cuenta con el correo <strong>{data?.email}</strong>.
+            </p>
+            <p>
+              Para vincular tu cuenta de GitHub con tu cuenta existente, ingresa
+              tu contraseña:
+            </p>
+            <div className="mb-3">
+              <label className="form-label">
+                <i className="bi bi-lock me-2"></i>Contraseña
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                required
+                placeholder="Ingresa tu contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShow(false);
+                onCancel();
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button variant="primary" type="submit">
+              Vincular cuentas
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );

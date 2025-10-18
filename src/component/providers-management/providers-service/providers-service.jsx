@@ -9,8 +9,7 @@ import {
   serverTimestamp,
   query,
   orderBy,
-  where,
-  limit,
+
 } from "firebase/firestore";
 
 // Colección de proveedores en Firestore
@@ -36,60 +35,6 @@ export const getProviders = async () => {
   }));
 };
 
-// READ - Obtener proveedores activos únicamente
-export const getActiveProviders = async () => {
-  const q = query(
-    providersCollection,
-    where("State", "==", "Activo"),
-    orderBy("Creation", "desc"),
-  );
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-};
-
-// READ - Obtener proveedores por categoría
-export const getProvidersByCategory = async (category) => {
-  const q = query(
-    providersCollection,
-    where("Category", "==", category),
-    where("State", "==", "Activo"),
-    orderBy("Creation", "desc"),
-  );
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-};
-
-// READ - Búsqueda de proveedores por nombre
-export const searchProvidersByName = async (searchTerm) => {
-  const snapshot = await getDocs(providersCollection);
-  const allProviders = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  // Filtrar por nombre (búsqueda case-insensitive)
-  return allProviders.filter(
-    (provider) =>
-      provider.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.CompanyName?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-};
-
-// READ - Obtener proveedores recientes (últimos 10)
-export const getRecentProviders = async () => {
-  const q = query(providersCollection, orderBy("Creation", "desc"), limit(10));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-};
 
 // UPDATE - Actualizar proveedor existente
 export const updateProvider = async (id, newData) => {
@@ -101,7 +46,7 @@ export const updateProvider = async (id, newData) => {
   return updateDoc(providerDoc, payload);
 };
 
-// DELETE - Eliminar proveedor definitivamente
+// DELETE - Eliminar proveedor 
 export const deleteProvider = async (id) => {
   const providerDoc = doc(db, "Providers", id);
   return deleteDoc(providerDoc);
