@@ -159,6 +159,14 @@ export function Login() {
                     <i className="bi bi-github me-2"></i>
                     Iniciar sesión con GitHub
                   </button>
+                  <button
+                    type="button"
+                    onClick={handleFacebookLogin}
+                    className="btn w-100 mb-2 text-white"
+                    style={{ backgroundColor: "#1877F2" }}
+                  >
+                    Iniciar sesión con Facebook
+                  </button>
 
                   <div className="text-center mt-2 mb-2">
                     <span>¿No tienes una cuenta? </span>
@@ -185,6 +193,8 @@ export function Login() {
     </>
   );
 }
+
+function handleFacebookLogin() {}
 
 function ModalError({ message, clear }) {
   const [show, setShow] = useState(true);
