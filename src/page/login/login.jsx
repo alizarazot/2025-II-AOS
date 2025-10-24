@@ -13,7 +13,6 @@ import {
   signInWithPopup,
   githubProvider,
   linkWithCredential,
-
 } from "../../firebase";
 
 export function Login() {
@@ -21,7 +20,7 @@ export function Login() {
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [linkAccountData, setLinkAccountData] = useState(null);
-  
+
   function handleLogin(formData) {
     const email = formData.get("email");
     const password = formData.get("password");
@@ -45,11 +44,11 @@ export function Login() {
         if (error.code === "auth/account-exists-with-different-credential") {
           const email = error.customData.email;
           const credential = error.credential;
-          
+
           // Guardar información para vincular después
           setLinkAccountData({
             email: email,
-            credential: credential
+            credential: credential,
           });
         } else {
           setErrorMessage(error.message);
@@ -59,12 +58,15 @@ export function Login() {
 
   function handleLinkAccounts(password) {
     if (!linkAccountData) return;
-    
+
     // Iniciar sesión con email/password
     signInWithEmailAndPassword(auth, linkAccountData.email, password)
       .then((userCredential) => {
         // Vincular con GitHub
-        return linkWithCredential(userCredential.user, linkAccountData.credential);
+        return linkWithCredential(
+          userCredential.user,
+          linkAccountData.credential,
+        );
       })
       .then(() => {
         // Vinculación exitosa
@@ -144,11 +146,11 @@ export function Login() {
                   <button type="submit" className="btn btn-primary w-100 mb-2">
                     Iniciar sesión
                   </button>
-                  
+
                   <div className="text-center my-3">
                     <span className="text-muted">o</span>
                   </div>
-                  
+
                   <button
                     type="button"
                     onClick={handleGithubLogin}
@@ -157,7 +159,7 @@ export function Login() {
                     <i className="bi bi-github me-2"></i>
                     Iniciar sesión con GitHub
                   </button>
-                  
+
                   <div className="text-center mt-2 mb-2">
                     <span>¿No tienes una cuenta? </span>
                     <a href="/register">Regístrate</a>

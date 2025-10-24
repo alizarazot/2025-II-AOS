@@ -35,13 +35,13 @@ const githubProvider = new GithubAuthProvider();
 
 // Configurar GitHub para que SIEMPRE pida autorización y muestre con qué cuenta inicia
 githubProvider.setCustomParameters({
-  allow_signup: 'true',
+  allow_signup: "true",
   // Esto fuerza a mostrar la pantalla de autorización
-  prompt: 'consent'
+  prompt: "consent",
 });
 
 // Forzar selección de cuenta
-githubProvider.addScope('user:email');
+githubProvider.addScope("user:email");
 
 // conexion a db
 const db = getFirestore();
