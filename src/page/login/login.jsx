@@ -15,6 +15,8 @@ import {
   linkWithCredential,
 } from "../../firebase";
 
+import { FacebookAuthProvider } from "firebase/auth";
+
 export function Login() {
   const navigate = useNavigate();
 
@@ -53,6 +55,21 @@ export function Login() {
         } else {
           setErrorMessage(error.message);
         }
+      });
+  }
+
+  function handleFacebookLogin() {
+    const provider = new FacebookAuthProvider();
+    provider.addScope("email");
+    provider.addScope("user_gender");
+    provider.addScope("user_hometown");
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 
@@ -193,8 +210,6 @@ export function Login() {
     </>
   );
 }
-
-function handleFacebookLogin() {}
 
 function ModalError({ message, clear }) {
   const [show, setShow] = useState(true);
