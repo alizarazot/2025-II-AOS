@@ -5,6 +5,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   GithubAuthProvider,
+  FacebookAuthProvider,
   signOut,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -32,6 +33,12 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
+// Configurar Google para SIEMPRE forzar selección de cuenta
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+});
 
 // Configurar GitHub para que SIEMPRE pida autorización y muestre con qué cuenta inicia
 githubProvider.setCustomParameters({
@@ -43,6 +50,13 @@ githubProvider.setCustomParameters({
 // Forzar selección de cuenta
 githubProvider.addScope('user:email');
 
+// Configurar Facebook para que SIEMPRE pida autorización
+facebookProvider.setCustomParameters({
+  display: 'popup'
+});
+
+facebookProvider.addScope('email');
+
 // conexion a db
 const db = getFirestore();
 
@@ -51,8 +65,10 @@ export {
   auth,
   GoogleAuthProvider,
   GithubAuthProvider,
+  FacebookAuthProvider,
   googleProvider,
   githubProvider,
+  facebookProvider,
   signOut,
   signInWithPopup,
   db,

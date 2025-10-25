@@ -12,9 +12,13 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   githubProvider,
+  facebookProvider,
   linkWithCredential,
-
+  FacebookAuthProvider,
+  fetchSignInMethodsForEmail,
+  db,
 } from "../../firebase";
+import { collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
 
 export function Login() {
   const navigate = useNavigate();
@@ -41,6 +45,11 @@ export function Login() {
         navigate("/dashboard");
       })
       .catch((error) => {
+        // Ignorar si el usuario cerró el popup
+        if (error.code === "auth/popup-closed-by-user") {
+          return;
+        }
+        
         // Manejar el caso de cuenta existente con diferente credencial
         if (error.code === "auth/account-exists-with-different-credential") {
           const email = error.customData.email;
@@ -57,24 +66,158 @@ export function Login() {
       });
   }
 
-  function handleLinkAccounts(password) {
+  async function handleFacebookLogin() {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const email = result.user.email?.toLowerCase();
+      const userId = result.user.uid;
+      
+      if (!email) {
+        navigate("/dashboard");
+        return;
+      }
+
+      // Buscar en Firestore si existe un usuario con este correo
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("correo", "==", email));
+      const querySnapshot = await getDocs(q);
+      
+      // Si encontramos un documento con este correo
+      if (!querySnapshot.empty) {
+        const existingUserDoc = querySnapshot.docs[0];
+        const userData = existingUserDoc.data();
+        
+        // Verificar si el método es password
+        if (userData.metodo === "password") {
+          // Conflicto detectado: usuario registrado con password intentando entrar con Facebook
+          // Obtener el token ANTES de cerrar sesión
+          const idToken = await result.user.getIdToken();
+          
+          // Cerrar sesión inmediatamente
+          await auth.signOut();
+          
+          // Crear credencial de Facebook manualmente
+          const credential = FacebookAuthProvider.credential(idToken);
+          
+          setLinkAccountData({
+            email,
+            credential,
+            providerId: "facebook.com",
+            existingMethods: ["password"],
+            primaryMethod: "password",
+            needsLinking: true,
+          });
+          
+          setErrorMessage(
+            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular Facebook a tu cuenta."
+          );
+          return;
+        }
+      } else {
+        // Usuario nuevo con Facebook, crear documento en Firestore
+        await setDoc(doc(db, "users", userId), {
+          uid: userId,
+          nombres: result.user.displayName?.split(" ")[0] || "",
+          apellidos: result.user.displayName?.split(" ").slice(1).join(" ") || "",
+          correo: email,
+          nationality: "",
+          sexo: "",
+          estado: "pendiente",
+          rol: "visitante",
+          creado: new Date(),
+          metodo: "facebook",
+        });
+      }
+      
+      // Si llegamos aquí, no hay conflicto o ya está vinculado
+      navigate("/dashboard");
+      
+    } catch (error) {
+      // Ignorar si el usuario cerró el popup
+      if (error.code === "auth/popup-closed-by-user") {
+        return;
+      }
+      
+      if (error.code === "auth/account-exists-with-different-credential") {
+        const email = error.customData?.email;
+        const credential = FacebookAuthProvider.credentialFromError(error);
+
+        if (!email || !credential) {
+          setErrorMessage(
+            "No se pudo vincular la cuenta de Facebook. Intenta iniciar sesión con tu correo y contraseña."
+          );
+          return;
+        }
+
+        const normalizedEmail = email.toLowerCase();
+
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, normalizedEmail);
+          const primaryMethod = methods?.[0] ?? "password";
+
+          setLinkAccountData({
+            email: normalizedEmail,
+            credential,
+            providerId: credential.providerId || "facebook.com",
+            existingMethods: methods,
+            primaryMethod,
+          });
+        } catch (methodError) {
+          setErrorMessage(
+            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña."
+          );
+        }
+      } else {
+        setErrorMessage(error.message);
+      }
+    }
+  }
+
+  async function handleLinkAccounts(password) {
     if (!linkAccountData) return;
     
-    // Iniciar sesión con email/password
-    signInWithEmailAndPassword(auth, linkAccountData.email, password)
-      .then((userCredential) => {
-        // Vincular con GitHub
-        return linkWithCredential(userCredential.user, linkAccountData.credential);
-      })
-      .then(() => {
-        // Vinculación exitosa
-        setLinkAccountData(null);
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-        setLinkAccountData(null);
-      });
+    try {
+      // Iniciar sesión con email/password
+      const userCredential = await signInWithEmailAndPassword(auth, linkAccountData.email, password);
+      
+      // Vincular con el proveedor pendiente (GitHub/Facebook/Google, etc.)
+      if (!linkAccountData.credential) {
+        throw new Error("No se pudo obtener la credencial para vincular la cuenta.");
+      }
+      
+      await linkWithCredential(userCredential.user, linkAccountData.credential);
+      
+      // Actualizar Firestore para registrar que ahora tiene múltiples métodos
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("correo", "==", linkAccountData.email));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const userDocRef = doc(db, "users", querySnapshot.docs[0].id);
+        const currentData = querySnapshot.docs[0].data();
+        const currentMetodo = currentData.metodo;
+        
+        // Actualizar a lista de métodos si es necesario
+        let newMetodo = currentMetodo;
+        if (typeof currentMetodo === "string") {
+          newMetodo = [currentMetodo, linkAccountData.providerId];
+        } else if (Array.isArray(currentMetodo)) {
+          if (!currentMetodo.includes(linkAccountData.providerId)) {
+            newMetodo = [...currentMetodo, linkAccountData.providerId];
+          }
+        }
+        
+        await setDoc(userDocRef, { metodo: newMetodo }, { merge: true });
+      }
+      
+      // Vinculación exitosa
+      setLinkAccountData(null);
+      navigate("/dashboard");
+      
+    } catch (error) {
+      setErrorMessage(error.message);
+      setLinkAccountData(null);
+    }
   }
 
   const [isLoading, setIsLoading] = useState(true);
@@ -156,6 +299,20 @@ export function Login() {
                   >
                     <i className="bi bi-github me-2"></i>
                     Iniciar sesión con GitHub
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleFacebookLogin}
+                    className="btn w-100 mb-2"
+                    style={{
+                      backgroundColor: '#1877F2',
+                      color: 'white',
+                      border: 'none'
+                    }}
+                  >
+                    <i className="bi bi-facebook me-2"></i>
+                    Iniciar sesión con Facebook
                   </button>
                   
                   <div className="text-center mt-2 mb-2">
