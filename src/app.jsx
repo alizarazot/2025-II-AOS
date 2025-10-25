@@ -7,6 +7,7 @@ import { Login } from "./page/login/login.jsx";
 import { Dashboard } from "./page/dashboard/dashboard.jsx";
 import { Register } from "./page/login/register.jsx";
 import { Reset } from "./page/login/reset.jsx";
+import { Forget } from "./page/login/forget.jsx";
 
 import { ProtectedRoute } from "./component/protected-route.jsx";
 import { ClientManagement } from "./component/client-management/client-management.jsx";
@@ -35,6 +36,7 @@ export const routes = (
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
+      <Route path="/forget" element={<Forget />} />
       <Route path="/login" element={<Login />} />
     </Routes>
   </BrowserRouter>
