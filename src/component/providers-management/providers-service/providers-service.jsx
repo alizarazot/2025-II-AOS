@@ -9,7 +9,6 @@ import {
   serverTimestamp,
   query,
   orderBy,
-
 } from "firebase/firestore";
 
 // Colección de proveedores en Firestore
@@ -35,7 +34,6 @@ export const getProviders = async () => {
   }));
 };
 
-
 // UPDATE - Actualizar proveedor existente
 export const updateProvider = async (id, newData) => {
   const providerDoc = doc(db, "Providers", id);
@@ -46,7 +44,7 @@ export const updateProvider = async (id, newData) => {
   return updateDoc(providerDoc, payload);
 };
 
-// DELETE - Eliminar proveedor 
+// DELETE - Eliminar proveedor
 export const deleteProvider = async (id) => {
   const providerDoc = doc(db, "Providers", id);
   return deleteDoc(providerDoc);

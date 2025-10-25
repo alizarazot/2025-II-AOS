@@ -18,14 +18,21 @@ import {
   fetchSignInMethodsForEmail,
   db,
 } from "../../firebase";
-import { collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 
 export function Login() {
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [linkAccountData, setLinkAccountData] = useState(null);
-  
+
   function handleLogin(formData) {
     const email = formData.get("email");
     const password = formData.get("password");
@@ -49,16 +56,16 @@ export function Login() {
         if (error.code === "auth/popup-closed-by-user") {
           return;
         }
-        
+
         // Manejar el caso de cuenta existente con diferente credencial
         if (error.code === "auth/account-exists-with-different-credential") {
           const email = error.customData.email;
           const credential = error.credential;
-          
+
           // Guardar información para vincular después
           setLinkAccountData({
             email: email,
-            credential: credential
+            credential: credential,
           });
         } else {
           setErrorMessage(error.message);
@@ -71,7 +78,7 @@ export function Login() {
       const result = await signInWithPopup(auth, facebookProvider);
       const email = result.user.email?.toLowerCase();
       const userId = result.user.uid;
-      
+
       if (!email) {
         navigate("/dashboard");
         return;
@@ -81,24 +88,24 @@ export function Login() {
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("correo", "==", email));
       const querySnapshot = await getDocs(q);
-      
+
       // Si encontramos un documento con este correo
       if (!querySnapshot.empty) {
         const existingUserDoc = querySnapshot.docs[0];
         const userData = existingUserDoc.data();
-        
+
         // Verificar si el método es password
         if (userData.metodo === "password") {
           // Conflicto detectado: usuario registrado con password intentando entrar con Facebook
           // Obtener el token ANTES de cerrar sesión
           const idToken = await result.user.getIdToken();
-          
+
           // Cerrar sesión inmediatamente
           await auth.signOut();
-          
+
           // Crear credencial de Facebook manualmente
           const credential = FacebookAuthProvider.credential(idToken);
-          
+
           setLinkAccountData({
             email,
             credential,
@@ -107,9 +114,9 @@ export function Login() {
             primaryMethod: "password",
             needsLinking: true,
           });
-          
+
           setErrorMessage(
-            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular Facebook a tu cuenta."
+            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular Facebook a tu cuenta.",
           );
           return;
         }
@@ -118,7 +125,8 @@ export function Login() {
         await setDoc(doc(db, "users", userId), {
           uid: userId,
           nombres: result.user.displayName?.split(" ")[0] || "",
-          apellidos: result.user.displayName?.split(" ").slice(1).join(" ") || "",
+          apellidos:
+            result.user.displayName?.split(" ").slice(1).join(" ") || "",
           correo: email,
           nationality: "",
           sexo: "",
@@ -128,23 +136,22 @@ export function Login() {
           metodo: "facebook",
         });
       }
-      
+
       // Si llegamos aquí, no hay conflicto o ya está vinculado
       navigate("/dashboard");
-      
     } catch (error) {
       // Ignorar si el usuario cerró el popup
       if (error.code === "auth/popup-closed-by-user") {
         return;
       }
-      
+
       if (error.code === "auth/account-exists-with-different-credential") {
         const email = error.customData?.email;
         const credential = FacebookAuthProvider.credentialFromError(error);
 
         if (!email || !credential) {
           setErrorMessage(
-            "No se pudo vincular la cuenta de Facebook. Intenta iniciar sesión con tu correo y contraseña."
+            "No se pudo vincular la cuenta de Facebook. Intenta iniciar sesión con tu correo y contraseña.",
           );
           return;
         }
@@ -152,7 +159,10 @@ export function Login() {
         const normalizedEmail = email.toLowerCase();
 
         try {
-          const methods = await fetchSignInMethodsForEmail(auth, normalizedEmail);
+          const methods = await fetchSignInMethodsForEmail(
+            auth,
+            normalizedEmail,
+          );
           const primaryMethod = methods?.[0] ?? "password";
 
           setLinkAccountData({
@@ -164,7 +174,7 @@ export function Login() {
           });
         } catch (methodError) {
           setErrorMessage(
-            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña."
+            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña.",
           );
         }
       } else {
@@ -175,28 +185,34 @@ export function Login() {
 
   async function handleLinkAccounts(password) {
     if (!linkAccountData) return;
-    
+
     try {
       // Iniciar sesión con email/password
-      const userCredential = await signInWithEmailAndPassword(auth, linkAccountData.email, password);
-      
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        linkAccountData.email,
+        password,
+      );
+
       // Vincular con el proveedor pendiente (GitHub/Facebook/Google, etc.)
       if (!linkAccountData.credential) {
-        throw new Error("No se pudo obtener la credencial para vincular la cuenta.");
+        throw new Error(
+          "No se pudo obtener la credencial para vincular la cuenta.",
+        );
       }
-      
+
       await linkWithCredential(userCredential.user, linkAccountData.credential);
-      
+
       // Actualizar Firestore para registrar que ahora tiene múltiples métodos
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("correo", "==", linkAccountData.email));
       const querySnapshot = await getDocs(q);
-      
+
       if (!querySnapshot.empty) {
         const userDocRef = doc(db, "users", querySnapshot.docs[0].id);
         const currentData = querySnapshot.docs[0].data();
         const currentMetodo = currentData.metodo;
-        
+
         // Actualizar a lista de métodos si es necesario
         let newMetodo = currentMetodo;
         if (typeof currentMetodo === "string") {
@@ -206,14 +222,13 @@ export function Login() {
             newMetodo = [...currentMetodo, linkAccountData.providerId];
           }
         }
-        
+
         await setDoc(userDocRef, { metodo: newMetodo }, { merge: true });
       }
-      
+
       // Vinculación exitosa
       setLinkAccountData(null);
       navigate("/dashboard");
-      
     } catch (error) {
       setErrorMessage(error.message);
       setLinkAccountData(null);
@@ -287,11 +302,11 @@ export function Login() {
                   <button type="submit" className="btn btn-primary w-100 mb-2">
                     Iniciar sesión
                   </button>
-                  
+
                   <div className="text-center my-3">
                     <span className="text-muted">o</span>
                   </div>
-                  
+
                   <button
                     type="button"
                     onClick={handleGithubLogin}
@@ -306,15 +321,15 @@ export function Login() {
                     onClick={handleFacebookLogin}
                     className="btn w-100 mb-2"
                     style={{
-                      backgroundColor: '#1877F2',
-                      color: 'white',
-                      border: 'none'
+                      backgroundColor: "#1877F2",
+                      color: "white",
+                      border: "none",
                     }}
                   >
                     <i className="bi bi-facebook me-2"></i>
                     Iniciar sesión con Facebook
                   </button>
-                  
+
                   <div className="text-center mt-2 mb-2">
                     <span>¿No tienes una cuenta? </span>
                     <a href="/register">Regístrate</a>
