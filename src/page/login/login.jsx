@@ -11,6 +11,7 @@ import {
   auth,
   signInWithEmailAndPassword,
   signInWithPopup,
+  googleProvider,
   githubProvider,
   facebookProvider,
   linkWithCredential,
@@ -18,6 +19,7 @@ import {
   fetchSignInMethodsForEmail,
   db,
 } from "../../firebase";
+
 import {
   collection,
   query,
@@ -45,7 +47,15 @@ export function Login() {
       });
   }
 
-  function handleGoogleLogin() {}
+  function handleGoogleLogin() {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      });
+  }
 
   function handleGithubLogin() {
     signInWithPopup(auth, githubProvider)
