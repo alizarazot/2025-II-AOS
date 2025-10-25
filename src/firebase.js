@@ -37,25 +37,25 @@ const facebookProvider = new FacebookAuthProvider();
 
 // Configurar Google para SIEMPRE forzar selección de cuenta
 googleProvider.setCustomParameters({
-  prompt: 'select_account',
+  prompt: "select_account",
 });
 
 // Configurar GitHub para que SIEMPRE pida autorización y muestre con qué cuenta inicia
 githubProvider.setCustomParameters({
-  allow_signup: 'true',
+  allow_signup: "true",
   // Esto fuerza a mostrar la pantalla de autorización
-  prompt: 'consent'
+  prompt: "consent",
 });
 
 // Forzar selección de cuenta
-githubProvider.addScope('user:email');
+githubProvider.addScope("user:email");
 
 // Configurar Facebook para que SIEMPRE pida autorización
 facebookProvider.setCustomParameters({
-  display: 'popup'
+  display: "popup",
 });
 
-facebookProvider.addScope('email');
+facebookProvider.addScope("email");
 
 // conexion a db
 const db = getFirestore();
