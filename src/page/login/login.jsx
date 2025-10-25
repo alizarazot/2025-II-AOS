@@ -45,6 +45,8 @@ export function Login() {
       });
   }
 
+  function handleGoogleLogin() {}
+
   function handleGithubLogin() {
     signInWithPopup(auth, githubProvider)
       .then((result) => {
@@ -306,6 +308,15 @@ export function Login() {
                   <div className="text-center my-3">
                     <span className="text-muted">o</span>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    className="btn mb-2 w-100 text-white"
+                    style={{ backgroundColor: "#de5246" }}
+                  >
+                    Iniciar sesión con Google
+                  </button>
 
                   <button
                     type="button"
