@@ -16,6 +16,8 @@ import {
   facebookProvider,
   linkWithCredential,
   FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
   fetchSignInMethodsForEmail,
   db,
 } from "../../firebase";
@@ -47,42 +49,224 @@ export function Login() {
       });
   }
 
-  function handleGoogleLogin() {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-      });
-  }
+  async function handleGoogleLogin() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const email = result.user.email?.toLowerCase();
+      const userId = result.user.uid;
 
-  function handleGithubLogin() {
-    signInWithPopup(auth, githubProvider)
-      .then((result) => {
-        // Usuario autenticado con éxito
+      if (!email) {
         navigate("/dashboard");
-      })
-      .catch((error) => {
-        // Ignorar si el usuario cerró el popup
-        if (error.code === "auth/popup-closed-by-user") {
+        return;
+      }
+
+      // Buscar en Firestore si existe un usuario con este correo
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("correo", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      // Si encontramos un documento con este correo
+      if (!querySnapshot.empty) {
+        const existingUserDoc = querySnapshot.docs[0];
+        const userData = existingUserDoc.data();
+
+        // Verificar si el método es password
+        if (userData.metodo === "password") {
+          // Conflicto detectado: usuario registrado con password intentando entrar con Google
+          // Obtener el token ANTES de cerrar sesión
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+
+          // Cerrar sesión inmediatamente
+          await auth.signOut();
+
+          setLinkAccountData({
+            email,
+            credential,
+            providerId: "google.com",
+            existingMethods: ["password"],
+            primaryMethod: "password",
+            needsLinking: true,
+          });
+
+          setErrorMessage(
+            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular Google a tu cuenta.",
+          );
+          return;
+        }
+      } else {
+        // Usuario nuevo con Google, crear documento en Firestore
+        await setDoc(doc(db, "users", userId), {
+          uid: userId,
+          nombres: result.user.displayName?.split(" ")[0] || "",
+          apellidos:
+            result.user.displayName?.split(" ").slice(1).join(" ") || "",
+          correo: email,
+          nationality: "",
+          sexo: "",
+          estado: "pendiente",
+          rol: "visitante",
+          creado: new Date(),
+          metodo: "google",
+        });
+      }
+
+      // Si llegamos aquí, no hay conflicto o ya está vinculado
+      navigate("/dashboard");
+    } catch (error) {
+      // Ignorar si el usuario cerró el popup
+      if (error.code === "auth/popup-closed-by-user") {
+        return;
+      }
+
+      if (error.code === "auth/account-exists-with-different-credential") {
+        const email = error.customData?.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        if (!email || !credential) {
+          setErrorMessage(
+            "No se pudo vincular la cuenta de Google. Intenta iniciar sesión con tu correo y contraseña.",
+          );
           return;
         }
 
-        // Manejar el caso de cuenta existente con diferente credencial
-        if (error.code === "auth/account-exists-with-different-credential") {
-          const email = error.customData.email;
-          const credential = error.credential;
+        const normalizedEmail = email.toLowerCase();
 
-          // Guardar información para vincular después
+        try {
+          const methods = await fetchSignInMethodsForEmail(
+            auth,
+            normalizedEmail,
+          );
+          const primaryMethod = methods?.[0] ?? "password";
+
           setLinkAccountData({
-            email: email,
-            credential: credential,
+            email: normalizedEmail,
+            credential,
+            providerId: credential.providerId || "google.com",
+            existingMethods: methods,
+            primaryMethod,
           });
-        } else {
-          setErrorMessage(error.message);
+          setErrorMessage(
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente."
+          );
+        } catch (methodError) {
+          setErrorMessage(
+            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña.",
+          );
         }
-      });
+      } else {
+        setErrorMessage(error.message);
+      }
+    }
+  }
+
+  async function handleGithubLogin() {
+    try {
+      const result = await signInWithPopup(auth, githubProvider);
+      const email = result.user.email?.toLowerCase();
+      const userId = result.user.uid;
+
+      if (!email) {
+        navigate("/dashboard");
+        return;
+      }
+
+      // Buscar en Firestore si existe un usuario con este correo
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("correo", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      // Si encontramos un documento con este correo
+      if (!querySnapshot.empty) {
+        const existingUserDoc = querySnapshot.docs[0];
+        const userData = existingUserDoc.data();
+
+        // Verificar si el método es password
+        if (userData.metodo === "password") {
+          // Conflicto detectado: usuario registrado con password intentando entrar con GitHub
+          // Obtener el token ANTES de cerrar sesión
+          const credential = GithubAuthProvider.credentialFromResult(result);
+
+          // Cerrar sesión inmediatamente
+          await auth.signOut();
+
+          setLinkAccountData({
+            email,
+            credential,
+            providerId: "github.com",
+            existingMethods: ["password"],
+            primaryMethod: "password",
+            needsLinking: true,
+          });
+
+          setErrorMessage(
+            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular GitHub a tu cuenta.",
+          );
+          return;
+        }
+      } else {
+        // Usuario nuevo con GitHub, crear documento en Firestore
+        await setDoc(doc(db, "users", userId), {
+          uid: userId,
+          nombres: result.user.displayName?.split(" ")[0] || "",
+          apellidos:
+            result.user.displayName?.split(" ").slice(1).join(" ") || "",
+          correo: email,
+          nationality: "",
+          sexo: "",
+          estado: "pendiente",
+          rol: "visitante",
+          creado: new Date(),
+          metodo: "github",
+        });
+      }
+
+      // Si llegamos aquí, no hay conflicto o ya está vinculado
+      navigate("/dashboard");
+    } catch (error) {
+      // Ignorar si el usuario cerró el popup
+      if (error.code === "auth/popup-closed-by-user") {
+        return;
+      }
+
+      if (error.code === "auth/account-exists-with-different-credential") {
+        const email = error.customData?.email;
+        const credential = GithubAuthProvider.credentialFromError(error);
+
+        if (!email || !credential) {
+          setErrorMessage(
+            "No se pudo vincular la cuenta de GitHub. Intenta iniciar sesión con tu correo y contraseña.",
+          );
+          return;
+        }
+
+        const normalizedEmail = email.toLowerCase();
+
+        try {
+          const methods = await fetchSignInMethodsForEmail(
+            auth,
+            normalizedEmail,
+          );
+          const primaryMethod = methods?.[0] ?? "password";
+
+          setLinkAccountData({
+            email: normalizedEmail,
+            credential,
+            providerId: credential.providerId || "github.com",
+            existingMethods: methods,
+            primaryMethod,
+          });
+          setErrorMessage(
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente."
+          );
+        } catch (methodError) {
+          setErrorMessage(
+            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña.",
+          );
+        }
+      } else {
+        setErrorMessage(error.message);
+      }
+    }
   }
 
   async function handleFacebookLogin() {
@@ -444,8 +628,14 @@ function ModalLinkAccount({ data, onLink, onCancel }) {
               Ya existe una cuenta con el correo <strong>{data?.email}</strong>.
             </p>
             <p>
-              Para vincular tu cuenta de GitHub con tu cuenta existente, ingresa
-              tu contraseña:
+              Por seguridad, necesitamos verificar que eres el dueño de esta cuenta.
+              Ingresa tu contraseña para vincular{" "}
+              <strong>
+                {data?.providerId === "github.com" && "GitHub"}
+                {data?.providerId === "google.com" && "Google"}
+                {data?.providerId === "facebook.com" && "Facebook"}
+              </strong>{" "}
+              a tu cuenta existente.
             </p>
             <div className="mb-3">
               <label className="form-label">

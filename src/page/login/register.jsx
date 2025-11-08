@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 export function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     nombres: "",
     apellidos: "",
@@ -163,16 +164,25 @@ export function Register() {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Confirmar contraseña</label>
-                  <input
-                    name="confirmPassword"
-                    type="password"
-                    className="form-control"
-                    id="confirmPassword"
-                    required
-                    placeholder="Repite la contraseña"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                  />
+                  <div className="input-group">
+                    <input
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="form-control"
+                      id="confirmPassword"
+                      required
+                      placeholder="Repite la contraseña"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                    />
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Nacionalidad</label>
