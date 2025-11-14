@@ -146,7 +146,7 @@ export function Login() {
             primaryMethod,
           });
           setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente."
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente.",
           );
         } catch (methodError) {
           setErrorMessage(
@@ -256,7 +256,7 @@ export function Login() {
             primaryMethod,
           });
           setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente."
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente.",
           );
         } catch (methodError) {
           setErrorMessage(
@@ -628,8 +628,8 @@ function ModalLinkAccount({ data, onLink, onCancel }) {
               Ya existe una cuenta con el correo <strong>{data?.email}</strong>.
             </p>
             <p>
-              Por seguridad, necesitamos verificar que eres el dueño de esta cuenta.
-              Ingresa tu contraseña para vincular{" "}
+              Por seguridad, necesitamos verificar que eres el dueño de esta
+              cuenta. Ingresa tu contraseña para vincular{" "}
               <strong>
                 {data?.providerId === "github.com" && "GitHub"}
                 {data?.providerId === "google.com" && "Google"}

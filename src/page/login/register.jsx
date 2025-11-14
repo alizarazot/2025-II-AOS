@@ -178,7 +178,9 @@ export function Register() {
                     <button
                       className="btn btn-outline-secondary"
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
