@@ -148,8 +148,8 @@ export function Products() {
 
   return (
     <div className="container py-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="m-0">Gestión de Productos</h2>
+      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-3">
+        <h2 className="mx-0 my-md-0 my-2">Gestión de Productos</h2>
         <button
           className="btn btn-primary"
           onClick={() => {

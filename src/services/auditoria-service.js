@@ -1,5 +1,11 @@
 import { db, auth } from "../firebase";
-import { collection, addDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 class AuditoriaService {
   constructor() {
@@ -41,7 +47,7 @@ class AuditoriaService {
     try {
       const sessionEndTime = new Date();
       const tiempoTotalMinutos = Math.round(
-        (sessionEndTime - this.sessionStartTime) / 1000 / 60
+        (sessionEndTime - this.sessionStartTime) / 1000 / 60,
       );
 
       const auditoriaDocRef = doc(db, "auditoria", this.sessionId);
@@ -64,7 +70,7 @@ class AuditoriaService {
   async registrarAccion(accion, detalles = "") {
     // Obtener el usuario actual de Firebase Auth si no está almacenado
     const usuario = this.currentUser || auth.currentUser;
-    
+
     if (!usuario) {
       console.error("❌ No hay usuario activo para registrar acción");
       console.log("this.currentUser:", this.currentUser);
