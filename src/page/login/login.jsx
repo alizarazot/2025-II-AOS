@@ -50,127 +50,50 @@ export function Login() {
   }
 
   async function handleGoogleLogin() {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const email = result.user.email?.toLowerCase();
-      const userId = result.user.uid;
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
 
-      if (!email) {
-        navigate("/dashboard");
-        return;
-      }
+    const user = result.user;
+    const email = user.email.toLowerCase();
 
-      // Buscar en Firestore si existe un usuario con este correo
-      const usersRef = collection(db, "users");
-      const q = query(usersRef, where("correo", "==", email));
-      const querySnapshot = await getDocs(q);
+    // Si es usuario NUEVO → crear documento
+    if (result._tokenResponse.isNewUser) {
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        nombres: user.displayName?.split(" ")[0] || "",
+        apellidos: user.displayName?.split(" ").slice(1).join(" ") || "",
+        correo: email,
+        rol: "visitante",
+        metodo: ["google.com"],
+        creado: new Date(),
+      });
+    }
 
-      // Si encontramos un documento con este correo
-      if (!querySnapshot.empty) {
-        const existingUserDoc = querySnapshot.docs[0];
-        const userData = existingUserDoc.data();
-        const metodo = userData.metodo;
+    navigate("/dashboard");
+  } catch (error) {
+    if (error.code === "auth/account-exists-with-different-credential") {
+      
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
 
-        // Verificar si ya tiene Google vinculado
-        const tieneGoogle = 
-          metodo === "google" || 
-          metodo === "google.com" ||
-          (Array.isArray(metodo) && (metodo.includes("google") || metodo.includes("google.com")));
+      const methods = await fetchSignInMethodsForEmail(auth, email);
 
-        if (tieneGoogle) {
-          // Ya tiene Google, permitir login directo
-          navigate("/dashboard");
-          return;
-        }
+      // Mostrar modal para ingresar password
+      setLinkAccountData({
+        email,
+        credential,
+        existingMethods: methods,
+        providerId: "google.com",
+      });
 
-        // Verificar si el método es password (conflicto real)
-        if (metodo === "password") {
-          // Conflicto detectado: usuario registrado con password intentando entrar con Google
-          // Obtener el token ANTES de cerrar sesión
-          const credential = GoogleAuthProvider.credentialFromResult(result);
+      return;
+    }
 
-          // Cerrar sesión inmediatamente
-          await auth.signOut();
-
-          setLinkAccountData({
-            email,
-            credential,
-            providerId: "google.com",
-            existingMethods: ["password"],
-            primaryMethod: "password",
-            needsLinking: true,
-          });
-
-          setErrorMessage(
-            "Ya tienes una cuenta con este correo usando contraseña. Ingresa tu contraseña para vincular Google a tu cuenta.",
-          );
-          return;
-        }
-      } else {
-        // Usuario nuevo con Google, crear documento en Firestore
-        await setDoc(doc(db, "users", userId), {
-          uid: userId,
-          nombres: result.user.displayName?.split(" ")[0] || "",
-          apellidos:
-            result.user.displayName?.split(" ").slice(1).join(" ") || "",
-          correo: email,
-          nationality: "",
-          sexo: "",
-          estado: "pendiente",
-          rol: "visitante",
-          creado: new Date(),
-          metodo: "google",
-        });
-      }
-
-      // Si llegamos aquí, no hay conflicto o ya está vinculado
-      navigate("/dashboard");
-    } catch (error) {
-      // Ignorar si el usuario cerró el popup
-      if (error.code === "auth/popup-closed-by-user") {
-        return;
-      }
-
-      if (error.code === "auth/account-exists-with-different-credential") {
-        const email = error.customData?.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-
-        if (!email || !credential) {
-          setErrorMessage(
-            "No se pudo vincular la cuenta de Google. Intenta iniciar sesión con tu correo y contraseña.",
-          );
-          return;
-        }
-
-        const normalizedEmail = email.toLowerCase();
-
-        try {
-          const methods = await fetchSignInMethodsForEmail(
-            auth,
-            normalizedEmail,
-          );
-          const primaryMethod = methods?.[0] ?? "password";
-
-          setLinkAccountData({
-            email: normalizedEmail,
-            credential,
-            providerId: credential.providerId || "google.com",
-            existingMethods: methods,
-            primaryMethod,
-          });
-          setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente."
-          );
-        } catch (methodError) {
-          setErrorMessage(
-            "No pudimos comprobar los métodos de acceso. Intenta iniciar sesión con tu contraseña.",
-          );
-        }
-      } else {
-        setErrorMessage(error.message);
-      }
+    if (error.code !== "auth/popup-closed-by-user") {
+      setErrorMessage(error.message);
     }
   }
+}
 
   async function handleGithubLogin() {
     try {

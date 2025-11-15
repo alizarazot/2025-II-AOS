@@ -14,6 +14,7 @@ import { ClientManagement } from "./component/client-management/client-managemen
 import { Products } from "./component/products-management/products-management.jsx";
 import { Providers } from "./component/providers-management/providers-management.jsx";
 import { AuditoriaView } from "./component/auditoria-view.jsx";
+import { AccountSettings } from "./component/account-settings.jsx";
 
 export const routes = (
   <BrowserRouter>
@@ -35,6 +36,7 @@ export const routes = (
         <Route path="products" element={<Products></Products>}></Route>
         <Route path="providers" element={<Providers></Providers>}></Route>
         <Route path="auditoria" element={<AuditoriaView></AuditoriaView>}></Route>
+        <Route path="settings" element={<AccountSettings></AccountSettings>}></Route>
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />
