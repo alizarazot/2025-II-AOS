@@ -332,14 +332,11 @@ export function Login() {
         // Verificar si el método es password (conflicto real)
         if (metodo === "password") {
           // Conflicto detectado: usuario registrado con password intentando entrar con Facebook
-          // Obtener el token ANTES de cerrar sesión
-          const idToken = await result.user.getIdToken();
+          // Obtener la credencial correcta de Facebook
+          const credential = FacebookAuthProvider.credentialFromResult(result);
 
           // Cerrar sesión inmediatamente
           await auth.signOut();
-
-          // Crear credencial de Facebook manualmente
-          const credential = FacebookAuthProvider.credential(idToken);
 
           setLinkAccountData({
             email,
