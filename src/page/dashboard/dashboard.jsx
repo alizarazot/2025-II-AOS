@@ -9,7 +9,7 @@ import { auditoriaService } from "../../services/auditoria-service";
 
 export function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
-  
+
   useEffect(() => {
     // Registrar ingreso cuando entra al dashboard
     const user = auth.currentUser;
@@ -22,10 +22,10 @@ export function Dashboard() {
       auditoriaService.registrarSalida();
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       // También registrar salida cuando el componente se desmonta
       auditoriaService.registrarSalida();
     };
@@ -38,18 +38,19 @@ export function Dashboard() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <CustomNavbar toggleSidebar={toggleSidebar} />
-      <div className="d-flex flex-fill">
+      <div className="d-flex">
         <div
           style={{
             width: sidebarVisible ? "250px" : "0px",
             transition: "width 0.3s ease-in-out",
             overflow: "hidden",
           }}
+          className="flex-shrink-0"
         >
           <DashboardMenu isVisible={sidebarVisible} />
         </div>
 
-        <div className="flex-fill my-3 mx-3">
+        <div className="flex-grow-1 my-3 mx-3 overflow-x-auto">
           <Outlet></Outlet>
         </div>
       </div>

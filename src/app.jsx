@@ -34,7 +34,10 @@ export const routes = (
         ></Route>
         <Route path="products" element={<Products></Products>}></Route>
         <Route path="providers" element={<Providers></Providers>}></Route>
-        <Route path="auditoria" element={<AuditoriaView></AuditoriaView>}></Route>
+        <Route
+          path="auditoria"
+          element={<AuditoriaView></AuditoriaView>}
+        ></Route>
       </Route>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />

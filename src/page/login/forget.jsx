@@ -3,7 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
-import { auth, confirmPasswordReset, verifyPasswordResetCode } from "../../firebase";
+import {
+  auth,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
+} from "../../firebase";
 
 export function Forget() {
   const navigate = useNavigate();
@@ -22,7 +26,7 @@ export function Forget() {
 
     if (!code) {
       setErrorMessage(
-        "Enlace inválido o expirado. Por favor solicita un nuevo enlace de recuperación."
+        "Enlace inválido o expirado. Por favor solicita un nuevo enlace de recuperación.",
       );
       setIsValidating(false);
       return;
@@ -37,7 +41,7 @@ export function Forget() {
       })
       .catch((error) => {
         setErrorMessage(
-          "El enlace ha expirado o es inválido. Por favor solicita un nuevo enlace de recuperación."
+          "El enlace ha expirado o es inválido. Por favor solicita un nuevo enlace de recuperación.",
         );
         setIsValidating(false);
       });
@@ -55,7 +59,7 @@ export function Forget() {
     // Validar que las contraseñas coincidan
     if (password !== confirmPassword) {
       setErrorMessage(
-        "Las contraseñas no coinciden. Por favor verifica e intenta nuevamente."
+        "Las contraseñas no coinciden. Por favor verifica e intenta nuevamente.",
       );
       return;
     }
@@ -73,7 +77,7 @@ export function Forget() {
       .then(() => {
         setIsLoading(false);
         setSuccessMessage(
-          "¡Contraseña actualizada exitosamente! Serás redirigido al inicio de sesión."
+          "¡Contraseña actualizada exitosamente! Serás redirigido al inicio de sesión.",
         );
         setTimeout(() => {
           navigate("/");
@@ -82,7 +86,7 @@ export function Forget() {
       .catch((error) => {
         setIsLoading(false);
         setErrorMessage(
-          "Error al restablecer la contraseña. Por favor intenta nuevamente."
+          "Error al restablecer la contraseña. Por favor intenta nuevamente.",
         );
       });
   };
@@ -211,7 +215,13 @@ function ModalError({ message, onClose }) {
   }, [message]);
 
   return (
-    <Modal show={show} onHide={() => { setShow(false); onClose(); }}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        onClose();
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           <i className="bi bi-exclamation-triangle-fill text-danger me-2"></i>
@@ -241,7 +251,13 @@ function ModalSuccess({ message, onClose }) {
   }, [message]);
 
   return (
-    <Modal show={show} onHide={() => { setShow(false); onClose(); }}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        onClose();
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           <i className="bi bi-check-circle-fill text-success me-2"></i>
