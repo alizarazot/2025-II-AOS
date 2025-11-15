@@ -8,6 +8,7 @@ import {
   FaPalette,
   FaEllipsisH,
   FaTruck,
+  FaClipboardList,
 } from "react-icons/fa";
 
 export function DashboardMenu({ isVisible }) {
@@ -84,6 +85,15 @@ export function DashboardMenu({ isVisible }) {
                     >
                       <FaTruck className="me-2" />
                       Proveedores
+                    </NavLink>
+                  </li>
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/auditoria"
+                      className="text-decoration-none text-dark d-block py-2 px-2 rounded"
+                    >
+                      <FaClipboardList className="me-2" />
+                      Auditoría
                     </NavLink>
                   </li>
                 </ul>

@@ -9,9 +9,16 @@ import {
 } from "react-icons/fa";
 
 import { auth } from "../firebase";
+import { auditoriaService } from "../services/auditoria-service";
 
 export const CustomNavbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await auditoriaService.registrarSalida();
+    await auth.signOut();
+    navigate("/");
+  };
 
   return (
     <Navbar bg="primary" variant="dark" className="px-3 py-3  fw-bold">
@@ -37,12 +44,7 @@ export const CustomNavbar = ({ toggleSidebar }) => {
           <Nav.Link href="#">
             <FaUser />
           </Nav.Link>
-          <Nav.Link
-            onClick={(_) => {
-              auth.signOut();
-              navigate("/");
-            }}
-          >
+          <Nav.Link onClick={handleSignOut}>
             <FaSignOutAlt />
           </Nav.Link>
         </Nav>

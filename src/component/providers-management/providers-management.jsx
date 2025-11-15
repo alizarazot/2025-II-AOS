@@ -6,6 +6,7 @@ import {
   updateProvider,
   deleteProvider,
 } from "./providers-service/providers-service";
+import { auditoriaService } from "../../services/auditoria-service";
 
 export function Providers() {
   const [providers, setProviders] = useState([]);
@@ -82,6 +83,7 @@ export function Providers() {
       setLoading(true);
       if (editingId) {
         await updateProvider(editingId, form);
+        await auditoriaService.registrarActualizacion("proveedor", form.Name);
         Swal.fire({
           icon: "success",
           title: "Actualizado",
@@ -90,6 +92,7 @@ export function Providers() {
         });
       } else {
         await addProvider(form);
+        await auditoriaService.registrarCreacion("proveedor", form.Name);
         Swal.fire({
           icon: "success",
           title: "Creado",
@@ -135,6 +138,7 @@ export function Providers() {
     try {
       setLoading(true);
       await deleteProvider(id);
+      await auditoriaService.registrarEliminacion("proveedor", name);
       Swal.fire({
         icon: "success",
         title: "Eliminado",

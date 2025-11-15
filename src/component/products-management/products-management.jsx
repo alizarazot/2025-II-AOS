@@ -6,6 +6,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "./products-service/products-service";
+import { auditoriaService } from "../../services/auditoria-service";
 
 export function Products() {
   // Datos
@@ -90,8 +91,10 @@ export function Products() {
     try {
       if (editingId) {
         await updateProduct(editingId, payload);
+        await auditoriaService.registrarActualizacion("producto", form.Name);
       } else {
         await addProduct(payload);
+        await auditoriaService.registrarCreacion("producto", form.Name);
       }
       await loadProducts();
       resetForm();
@@ -128,6 +131,7 @@ export function Products() {
 
     try {
       await deleteProduct(id);
+      await auditoriaService.registrarEliminacion("producto", name);
       await loadProducts();
       await Swal.fire({
         title: "Eliminado",
