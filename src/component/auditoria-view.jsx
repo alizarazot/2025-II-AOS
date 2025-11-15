@@ -71,10 +71,10 @@ export function AuditoriaView() {
 
   return (
     <Container fluid className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-4">
         <h2>Registro de Auditoría</h2>
         <Form.Select
-          style={{ width: "250px" }}
+          style={{ maxWidth: "250px" }}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
