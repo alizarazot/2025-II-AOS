@@ -11,7 +11,7 @@ export function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {

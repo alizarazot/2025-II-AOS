@@ -93,7 +93,10 @@ export function ClientManagement() {
                 const client = datalist.find((data) => data.id === id);
                 setDatalist(datalist.filter((data) => data.id != id));
                 await deleteDoc(doc(db, "clients", id.toString()));
-                await auditoriaService.registrarEliminacion("cliente", client?.name || id);
+                await auditoriaService.registrarEliminacion(
+                  "cliente",
+                  client?.name || id,
+                );
               }}
             ></Row>
           ))}
@@ -142,15 +145,27 @@ export function ClientManagement() {
 
               const obj = { ...currentData, id: currentId };
               const isUpdate = idx >= 0;
-              
+
               if (isUpdate) {
                 setDatalist(datalist.with(idx, obj));
-                await setDoc(doc(db, "clients", currentId.toString()), currentData);
-                await auditoriaService.registrarActualizacion("cliente", currentData.name);
+                await setDoc(
+                  doc(db, "clients", currentId.toString()),
+                  currentData,
+                );
+                await auditoriaService.registrarActualizacion(
+                  "cliente",
+                  currentData.name,
+                );
               } else {
                 setDatalist([...datalist, obj]);
-                await setDoc(doc(db, "clients", currentId.toString()), currentData);
-                await auditoriaService.registrarCreacion("cliente", currentData.name);
+                await setDoc(
+                  doc(db, "clients", currentId.toString()),
+                  currentData,
+                );
+                await auditoriaService.registrarCreacion(
+                  "cliente",
+                  currentData.name,
+                );
               }
 
               setCurrentId(-1);

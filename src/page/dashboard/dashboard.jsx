@@ -9,7 +9,7 @@ import { auditoriaService } from "../../services/auditoria-service";
 
 export function Dashboard() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
-  
+
   useEffect(() => {
     // Registrar ingreso cuando entra al dashboard
     const user = auth.currentUser;
@@ -22,10 +22,10 @@ export function Dashboard() {
       auditoriaService.registrarSalida();
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       // También registrar salida cuando el componente se desmonta
       auditoriaService.registrarSalida();
     };

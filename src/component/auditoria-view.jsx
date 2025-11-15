@@ -24,7 +24,7 @@ export function AuditoriaView() {
           where("Acción Realizada", ">=", filter),
           where("Acción Realizada", "<=", filter + "\uf8ff"),
           orderBy("Acción Realizada"),
-          orderBy("Ingreso", "desc")
+          orderBy("Ingreso", "desc"),
         );
       }
 

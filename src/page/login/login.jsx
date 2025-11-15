@@ -72,10 +72,11 @@ export function Login() {
         const metodo = userData.metodo;
 
         // Verificar si ya tiene Google vinculado
-        const tieneGoogle = 
-          metodo === "google" || 
+        const tieneGoogle =
+          metodo === "google" ||
           metodo === "google.com" ||
-          (Array.isArray(metodo) && (metodo.includes("google") || metodo.includes("google.com")));
+          (Array.isArray(metodo) &&
+            (metodo.includes("google") || metodo.includes("google.com")));
 
         if (tieneGoogle) {
           // Ya tiene Google, permitir login directo
@@ -159,7 +160,7 @@ export function Login() {
             primaryMethod,
           });
           setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente."
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular Google a tu cuenta existente.",
           );
         } catch (methodError) {
           setErrorMessage(
@@ -195,10 +196,11 @@ export function Login() {
         const metodo = userData.metodo;
 
         // Verificar si ya tiene GitHub vinculado
-        const tieneGithub = 
-          metodo === "github" || 
+        const tieneGithub =
+          metodo === "github" ||
           metodo === "github.com" ||
-          (Array.isArray(metodo) && (metodo.includes("github") || metodo.includes("github.com")));
+          (Array.isArray(metodo) &&
+            (metodo.includes("github") || metodo.includes("github.com")));
 
         if (tieneGithub) {
           // Ya tiene GitHub, permitir login directo
@@ -282,7 +284,7 @@ export function Login() {
             primaryMethod,
           });
           setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente."
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente.",
           );
         } catch (methodError) {
           setErrorMessage(
@@ -318,10 +320,11 @@ export function Login() {
         const metodo = userData.metodo;
 
         // Verificar si ya tiene Facebook vinculado
-        const tieneFacebook = 
-          metodo === "facebook" || 
+        const tieneFacebook =
+          metodo === "facebook" ||
           metodo === "facebook.com" ||
-          (Array.isArray(metodo) && (metodo.includes("facebook") || metodo.includes("facebook.com")));
+          (Array.isArray(metodo) &&
+            (metodo.includes("facebook") || metodo.includes("facebook.com")));
 
         if (tieneFacebook) {
           // Ya tiene Facebook, permitir login directo
@@ -663,8 +666,8 @@ function ModalLinkAccount({ data, onLink, onCancel }) {
               Ya existe una cuenta con el correo <strong>{data?.email}</strong>.
             </p>
             <p>
-              Por seguridad, necesitamos verificar que eres el dueño de esta cuenta.
-              Ingresa tu contraseña para vincular{" "}
+              Por seguridad, necesitamos verificar que eres el dueño de esta
+              cuenta. Ingresa tu contraseña para vincular{" "}
               <strong>
                 {data?.providerId === "github.com" && "GitHub"}
                 {data?.providerId === "google.com" && "Google"}

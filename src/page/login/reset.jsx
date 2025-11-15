@@ -19,18 +19,18 @@ export function Reset() {
     setErrorMessage(null);
 
     const actionCodeSettings = {
-      url: window.location.origin + '/forget',
+      url: window.location.origin + "/forget",
       handleCodeInApp: true,
     };
 
-    console.log('Enviando email a:', email);
-    console.log('URL de redirección:', actionCodeSettings.url);
+    console.log("Enviando email a:", email);
+    console.log("URL de redirección:", actionCodeSettings.url);
 
     sendPasswordResetEmail(auth, email, actionCodeSettings)
       .then(() => {
-        console.log('Email enviado exitosamente');
+        console.log("Email enviado exitosamente");
         setSuccessMessage(
-          "¡Correo enviado! Revisa tu bandeja de entrada y carpeta de spam para el enlace de recuperación."
+          "¡Correo enviado! Revisa tu bandeja de entrada y carpeta de spam para el enlace de recuperación.",
         );
         setEmail("");
         setIsLoading(false);
@@ -39,9 +39,9 @@ export function Reset() {
         }, 4000);
       })
       .catch((error) => {
-        console.error('Error al enviar email:', error);
-        console.error('Código de error:', error.code);
-        console.error('Mensaje:', error.message);
+        console.error("Error al enviar email:", error);
+        console.error("Código de error:", error.code);
+        console.error("Mensaje:", error.message);
         setIsLoading(false);
         if (error.code === "auth/user-not-found") {
           setErrorMessage("No existe una cuenta con este correo electrónico.");
@@ -92,8 +92,8 @@ export function Reset() {
                   <div className="mb-3 text-center text-muted small">
                     Te enviaremos un enlace para restablecer tu contraseña
                   </div>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary w-100 mb-3"
                     disabled={isLoading}
                   >
@@ -143,7 +143,13 @@ function ModalError({ message, onClose }) {
   }, [message]);
 
   return (
-    <Modal show={show} onHide={() => { setShow(false); onClose(); }}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        onClose();
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           <i className="bi bi-exclamation-triangle-fill text-danger me-2"></i>
@@ -173,7 +179,13 @@ function ModalSuccess({ message, onClose }) {
   }, [message]);
 
   return (
-    <Modal show={show} onHide={() => { setShow(false); onClose(); }}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        onClose();
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           <i className="bi bi-check-circle-fill text-success me-2"></i>
