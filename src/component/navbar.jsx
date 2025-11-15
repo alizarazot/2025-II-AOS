@@ -33,17 +33,19 @@ export const CustomNavbar = ({ toggleSidebar }) => {
 
       <Container fluid className="justify-content-end">
         <Nav className="align-items-center">
-          <Nav.Link href="#">Overview</Nav.Link>
-          <Nav.Link href="#">Documentation</Nav.Link>
-          <Nav.Link href="#">
-            <FaEnvelope />
-          </Nav.Link>
-          <Nav.Link href="#">
-            <FaBell />
-          </Nav.Link>
-          <Nav.Link href="#">
-            <FaUser />
-          </Nav.Link>
+          <div className="d-sm-flex d-none">
+            <Nav.Link href="#">Overview</Nav.Link>
+            <Nav.Link href="#">Documentation</Nav.Link>
+            <Nav.Link href="#">
+              <FaEnvelope />
+            </Nav.Link>
+            <Nav.Link href="#">
+              <FaBell />
+            </Nav.Link>
+            <Nav.Link href="#">
+              <FaUser />
+            </Nav.Link>
+          </div>
           <Nav.Link onClick={handleSignOut}>
             <FaSignOutAlt />
           </Nav.Link>
