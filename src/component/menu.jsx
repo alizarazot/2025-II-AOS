@@ -9,6 +9,7 @@ import {
   FaEllipsisH,
   FaTruck,
   FaClipboardList,
+  FaUserCog,
 } from "react-icons/fa";
 
 export function DashboardMenu({ isVisible }) {
@@ -122,6 +123,18 @@ export function DashboardMenu({ isVisible }) {
             >
               <div className="accordion-body px-0 py-2">
                 <ul className="list-unstyled ps-3">
+                  <li className="mb-2">
+                    <NavLink
+                      to="/dashboard/settings"
+                      className={({ isActive }) =>
+                        "text-decoration-none text-dark d-block p-2 rounded" +
+                        (isActive ? " bg-secondary-subtle" : "")
+                      }
+                    >
+                      <FaUserCog className="me-2" />
+                      Cuenta
+                    </NavLink>
+                  </li>
                   <li className="mb-2">
                     <a
                       href="#"
