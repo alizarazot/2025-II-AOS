@@ -12,6 +12,9 @@ import {
   fetchSignInMethodsForEmail,
   linkWithCredential,
   EmailAuthProvider,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -76,4 +79,7 @@ export {
   fetchSignInMethodsForEmail,
   linkWithCredential,
   EmailAuthProvider,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
 };

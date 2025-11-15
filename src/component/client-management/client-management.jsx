@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
+import { auditoriaService } from "../../services/auditoria-service";
 
 import { ClientManagementForm } from "./form.jsx";
 import { Row } from "./row.jsx";
@@ -88,9 +89,11 @@ export function ClientManagement() {
                 setCurrentData(tmpl);
                 setCurrentId(id);
               }}
-              onDelete={(id) => {
+              onDelete={async (id) => {
+                const client = datalist.find((data) => data.id === id);
                 setDatalist(datalist.filter((data) => data.id != id));
-                deleteDoc(doc(db, "clients", id.toString()));
+                await deleteDoc(doc(db, "clients", id.toString()));
+                await auditoriaService.registrarEliminacion("cliente", client?.name || id);
               }}
             ></Row>
           ))}
@@ -128,7 +131,7 @@ export function ClientManagement() {
             Close
           </Button>
           <Button
-            onClick={(_) => {
+            onClick={async (_) => {
               let idx = -1;
               for (let i = 0; i < datalist.length; i++) {
                 if (datalist[i].id === currentId) {
@@ -138,12 +141,16 @@ export function ClientManagement() {
               }
 
               const obj = { ...currentData, id: currentId };
-              if (idx >= 0) {
+              const isUpdate = idx >= 0;
+              
+              if (isUpdate) {
                 setDatalist(datalist.with(idx, obj));
-                setDoc(doc(db, "clients", currentId.toString()), currentData);
+                await setDoc(doc(db, "clients", currentId.toString()), currentData);
+                await auditoriaService.registrarActualizacion("cliente", currentData.name);
               } else {
                 setDatalist([...datalist, obj]);
-                setDoc(doc(db, "clients", currentId.toString()), currentData);
+                await setDoc(doc(db, "clients", currentId.toString()), currentData);
+                await auditoriaService.registrarCreacion("cliente", currentData.name);
               }
 
               setCurrentId(-1);

@@ -149,7 +149,6 @@ export function Login() {
         });
       }
 
-      // Si llegamos aquí, no hay conflicto o ya está vinculado
       navigate("/dashboard");
     } catch (error) {
       // Ignorar si el usuario cerró el popup

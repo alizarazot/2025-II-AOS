@@ -5,11 +5,13 @@ import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 
 import { auth } from "../firebase";
+import { auditoriaService } from "../services/auditoria-service";
 
 export function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
