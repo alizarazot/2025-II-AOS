@@ -69,9 +69,22 @@ export function Login() {
       if (!querySnapshot.empty) {
         const existingUserDoc = querySnapshot.docs[0];
         const userData = existingUserDoc.data();
+        const metodo = userData.metodo;
 
-        // Verificar si el método es password
-        if (userData.metodo === "password") {
+        // Verificar si ya tiene Google vinculado
+        const tieneGoogle = 
+          metodo === "google" || 
+          metodo === "google.com" ||
+          (Array.isArray(metodo) && (metodo.includes("google") || metodo.includes("google.com")));
+
+        if (tieneGoogle) {
+          // Ya tiene Google, permitir login directo
+          navigate("/dashboard");
+          return;
+        }
+
+        // Verificar si el método es password (conflicto real)
+        if (metodo === "password") {
           // Conflicto detectado: usuario registrado con password intentando entrar con Google
           // Obtener el token ANTES de cerrar sesión
           const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -179,9 +192,22 @@ export function Login() {
       if (!querySnapshot.empty) {
         const existingUserDoc = querySnapshot.docs[0];
         const userData = existingUserDoc.data();
+        const metodo = userData.metodo;
 
-        // Verificar si el método es password
-        if (userData.metodo === "password") {
+        // Verificar si ya tiene GitHub vinculado
+        const tieneGithub = 
+          metodo === "github" || 
+          metodo === "github.com" ||
+          (Array.isArray(metodo) && (metodo.includes("github") || metodo.includes("github.com")));
+
+        if (tieneGithub) {
+          // Ya tiene GitHub, permitir login directo
+          navigate("/dashboard");
+          return;
+        }
+
+        // Verificar si el método es password (conflicto real)
+        if (metodo === "password") {
           // Conflicto detectado: usuario registrado con password intentando entrar con GitHub
           // Obtener el token ANTES de cerrar sesión
           const credential = GithubAuthProvider.credentialFromResult(result);
@@ -289,9 +315,22 @@ export function Login() {
       if (!querySnapshot.empty) {
         const existingUserDoc = querySnapshot.docs[0];
         const userData = existingUserDoc.data();
+        const metodo = userData.metodo;
 
-        // Verificar si el método es password
-        if (userData.metodo === "password") {
+        // Verificar si ya tiene Facebook vinculado
+        const tieneFacebook = 
+          metodo === "facebook" || 
+          metodo === "facebook.com" ||
+          (Array.isArray(metodo) && (metodo.includes("facebook") || metodo.includes("facebook.com")));
+
+        if (tieneFacebook) {
+          // Ya tiene Facebook, permitir login directo
+          navigate("/dashboard");
+          return;
+        }
+
+        // Verificar si el método es password (conflicto real)
+        if (metodo === "password") {
           // Conflicto detectado: usuario registrado con password intentando entrar con Facebook
           // Obtener el token ANTES de cerrar sesión
           const idToken = await result.user.getIdToken();
