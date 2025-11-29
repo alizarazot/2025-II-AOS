@@ -8,6 +8,16 @@ import {
 } from "./products-service/products-service";
 import { auditoriaService } from "../../services/auditoria-service";
 
+import * as Excel from "exceljs";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+
 export function Products() {
   // Datos
   const [products, setProducts] = useState([]);
@@ -148,25 +158,41 @@ export function Products() {
 
   return (
     <div className="container py-3">
-      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-3">
+      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-3 gap-2">
         <h2 className="mx-0 my-md-0 my-2">Gestión de Productos</h2>
-        <button
-          className="btn btn-primary"
-          onClick={() => {
-            setShowForm(true);
-            setEditingId(null);
-            setForm({
-              Name: "",
-              Description: "",
-              Price: "",
-              Stock: "",
-              State: "Activa",
-            });
-          }}
-          disabled={loading}
-        >
-          + Agregar Producto
-        </button>
+        <div className="d-flex gap-2 flex-wrap">
+          <button
+            className="btn btn-success"
+            onClick={() => DownloadProductsAsExcel(products)}
+            disabled={loading || products.length === 0}
+          >
+            📊 Descargar Excel
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => DownloadProductsAsPDF(products)}
+            disabled={loading || products.length === 0}
+          >
+            📄 Descargar PDF
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setShowForm(true);
+              setEditingId(null);
+              setForm({
+                Name: "",
+                Description: "",
+                Price: "",
+                Stock: "",
+                State: "Activa",
+              });
+            }}
+            disabled={loading}
+          >
+            + Agregar Producto
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -356,4 +382,141 @@ export function Products() {
       )}
     </div>
   );
+}
+
+// Función para descargar productos como Excel
+async function DownloadProductsAsExcel(products) {
+  const workbook = new Excel.Workbook();
+  workbook.creator = "Temu2";
+  workbook.lastModifiedBy = "Temu2 WebApp";
+  workbook.created = new Date();
+
+  const sheet = workbook.addWorksheet("Productos", {
+    properties: { tabColor: { argb: "FF28A745" } },
+  });
+
+  sheet.columns = [
+    { header: "Nombre", key: "Name", width: 30 },
+    { header: "Descripción", key: "Description", width: 50 },
+    { header: "Precio", key: "Price", width: 15 },
+    { header: "Stock", key: "Stock", width: 10 },
+    { header: "Estado", key: "State", width: 15 },
+    { header: "Creado", key: "Created", width: 25 },
+    { header: "Actualizado", key: "Updated", width: 25 },
+  ];
+
+  products.forEach((product) => {
+    sheet.addRow({
+      Name: product.Name || "N/A",
+      Description: product.Description || "N/A",
+      Price: product.Price || 0,
+      Stock: product.Stock || 0,
+      State: product.State || "N/A",
+      Created: product._createdAtStr || "N/A",
+      Updated: product._updatedAtStr || "N/A",
+    });
+  });
+
+  workbook.modified = new Date();
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+  const downloadUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = downloadUrl;
+  anchor.download = "productos.xlsx";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+}
+
+// Función para descargar productos como PDF
+async function DownloadProductsAsPDF(products) {
+  const styles = StyleSheet.create({
+    page: {
+      padding: 30,
+      fontSize: 10,
+    },
+    title: {
+      fontSize: 18,
+      marginBottom: 20,
+      fontWeight: "bold",
+    },
+    table: {
+      width: "100%",
+      borderStyle: "solid",
+      borderWidth: 1,
+      borderColor: "#000",
+    },
+    tableHeader: {
+      flexDirection: "row",
+      backgroundColor: "#28a745",
+      color: "#fff",
+      fontWeight: "bold",
+    },
+    tableRow: {
+      flexDirection: "row",
+      borderBottomWidth: 1,
+      borderBottomColor: "#000",
+      borderBottomStyle: "solid",
+    },
+    tableRowEven: {
+      backgroundColor: "#f8f9fa",
+    },
+    tableCell: {
+      padding: 5,
+      fontSize: 8,
+      borderRightWidth: 1,
+      borderRightColor: "#000",
+      borderRightStyle: "solid",
+    },
+    tableCellHeader: {
+      padding: 5,
+      fontSize: 8,
+      borderRightWidth: 1,
+      borderRightColor: "#000",
+      borderRightStyle: "solid",
+      fontWeight: "bold",
+      color: "#fff",
+    },
+  });
+
+  const blob = await pdf(
+    <Document>
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <Text style={styles.title}>Lista de Productos</Text>
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={[styles.tableCellHeader, { width: "20%" }]}>Nombre</Text>
+            <Text style={[styles.tableCellHeader, { width: "30%" }]}>Descripción</Text>
+            <Text style={[styles.tableCellHeader, { width: "12%" }]}>Precio</Text>
+            <Text style={[styles.tableCellHeader, { width: "10%" }]}>Stock</Text>
+            <Text style={[styles.tableCellHeader, { width: "10%" }]}>Estado</Text>
+            <Text style={[styles.tableCellHeader, { width: "18%" }]}>Creado</Text>
+          </View>
+          {products.map((product, idx) => (
+            <View key={product.id} style={[styles.tableRow, idx % 2 === 0 && styles.tableRowEven]}>
+              <Text style={[styles.tableCell, { width: "20%" }]}>{product.Name}</Text>
+              <Text style={[styles.tableCell, { width: "30%" }]}>
+                {product.Description?.length > 50 ? product.Description.slice(0, 50) + "..." : product.Description}
+              </Text>
+              <Text style={[styles.tableCell, { width: "12%" }]}>${product.Price}</Text>
+              <Text style={[styles.tableCell, { width: "10%" }]}>{product.Stock}</Text>
+              <Text style={[styles.tableCell, { width: "10%" }]}>{product.State}</Text>
+              <Text style={[styles.tableCell, { width: "18%" }]}>{product._createdAtStr}</Text>
+            </View>
+          ))}
+        </View>
+      </Page>
+    </Document>
+  ).toBlob();
+
+  const downloadUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = downloadUrl;
+  anchor.download = "productos.pdf";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
 }
