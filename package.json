@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.1",
     "bootstrap": "^5.3.8",
     "exceljs": "^4.4.0",
     "firebase": "^12.3.0",
