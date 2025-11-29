@@ -50,50 +50,49 @@ export function Login() {
   }
 
   async function handleGoogleLogin() {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
 
-    const user = result.user;
-    const email = user.email.toLowerCase();
+      const user = result.user;
+      const email = user.email.toLowerCase();
 
-    // Si es usuario NUEVO → crear documento
-    if (result._tokenResponse.isNewUser) {
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        nombres: user.displayName?.split(" ")[0] || "",
-        apellidos: user.displayName?.split(" ").slice(1).join(" ") || "",
-        correo: email,
-        rol: "visitante",
-        metodo: ["google.com"],
-        creado: new Date(),
-      });
-    }
+      // Si es usuario NUEVO → crear documento
+      if (result._tokenResponse.isNewUser) {
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          nombres: user.displayName?.split(" ")[0] || "",
+          apellidos: user.displayName?.split(" ").slice(1).join(" ") || "",
+          correo: email,
+          rol: "visitante",
+          metodo: ["google.com"],
+          creado: new Date(),
+        });
+      }
 
-    navigate("/dashboard");
-  } catch (error) {
-    if (error.code === "auth/account-exists-with-different-credential") {
-      
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
+      navigate("/dashboard");
+    } catch (error) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
 
-      const methods = await fetchSignInMethodsForEmail(auth, email);
+        const methods = await fetchSignInMethodsForEmail(auth, email);
 
-      // Mostrar modal para ingresar password
-      setLinkAccountData({
-        email,
-        credential,
-        existingMethods: methods,
-        providerId: "google.com",
-      });
+        // Mostrar modal para ingresar password
+        setLinkAccountData({
+          email,
+          credential,
+          existingMethods: methods,
+          providerId: "google.com",
+        });
 
-      return;
-    }
+        return;
+      }
 
-    if (error.code !== "auth/popup-closed-by-user") {
-      setErrorMessage(error.message);
+      if (error.code !== "auth/popup-closed-by-user") {
+        setErrorMessage(error.message);
+      }
     }
   }
-}
 
   async function handleGithubLogin() {
     try {
@@ -118,10 +117,11 @@ export function Login() {
         const metodo = userData.metodo;
 
         // Verificar si ya tiene GitHub vinculado
-        const tieneGithub = 
-          metodo === "github" || 
+        const tieneGithub =
+          metodo === "github" ||
           metodo === "github.com" ||
-          (Array.isArray(metodo) && (metodo.includes("github") || metodo.includes("github.com")));
+          (Array.isArray(metodo) &&
+            (metodo.includes("github") || metodo.includes("github.com")));
 
         if (tieneGithub) {
           // Ya tiene GitHub, permitir login directo
@@ -205,7 +205,7 @@ export function Login() {
             primaryMethod,
           });
           setErrorMessage(
-            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente."
+            "Ya tienes una cuenta con este correo. Ingresa tu contraseña para vincular GitHub a tu cuenta existente.",
           );
         } catch (methodError) {
           setErrorMessage(
@@ -241,10 +241,11 @@ export function Login() {
         const metodo = userData.metodo;
 
         // Verificar si ya tiene Facebook vinculado
-        const tieneFacebook = 
-          metodo === "facebook" || 
+        const tieneFacebook =
+          metodo === "facebook" ||
           metodo === "facebook.com" ||
-          (Array.isArray(metodo) && (metodo.includes("facebook") || metodo.includes("facebook.com")));
+          (Array.isArray(metodo) &&
+            (metodo.includes("facebook") || metodo.includes("facebook.com")));
 
         if (tieneFacebook) {
           // Ya tiene Facebook, permitir login directo
@@ -586,8 +587,8 @@ function ModalLinkAccount({ data, onLink, onCancel }) {
               Ya existe una cuenta con el correo <strong>{data?.email}</strong>.
             </p>
             <p>
-              Por seguridad, necesitamos verificar que eres el dueño de esta cuenta.
-              Ingresa tu contraseña para vincular{" "}
+              Por seguridad, necesitamos verificar que eres el dueño de esta
+              cuenta. Ingresa tu contraseña para vincular{" "}
               <strong>
                 {data?.providerId === "github.com" && "GitHub"}
                 {data?.providerId === "google.com" && "Google"}

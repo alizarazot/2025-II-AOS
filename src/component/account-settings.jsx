@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import { Container, Card, Button, Form, Modal } from "react-bootstrap";
 import { auth, db, EmailAuthProvider } from "../firebase";
-import { 
-  linkWithCredential, 
+import {
+  linkWithCredential,
   fetchSignInMethodsForEmail,
   reauthenticateWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
-  FacebookAuthProvider
+  FacebookAuthProvider,
 } from "firebase/auth";
-import { doc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -41,7 +48,11 @@ export function AccountSettings() {
 
   const handleAddPassword = async () => {
     if (password.length < 6) {
-      return Swal.fire("Error", "La contraseña debe tener al menos 6 caracteres", "error");
+      return Swal.fire(
+        "Error",
+        "La contraseña debe tener al menos 6 caracteres",
+        "error",
+      );
     }
 
     if (password !== confirmPassword) {
@@ -54,7 +65,10 @@ export function AccountSettings() {
 
       // Actualizar Firestore
       const usersRef = collection(db, "users");
-      const q = query(usersRef, where("correo", "==", user.email.toLowerCase()));
+      const q = query(
+        usersRef,
+        where("correo", "==", user.email.toLowerCase()),
+      );
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
@@ -77,8 +91,12 @@ export function AccountSettings() {
       setPassword("");
       setConfirmPassword("");
       await loadAuthMethods(user.email);
-      
-      Swal.fire("¡Éxito!", "Contraseña agregada correctamente. Ahora puedes iniciar sesión con correo y contraseña.", "success");
+
+      Swal.fire(
+        "¡Éxito!",
+        "Contraseña agregada correctamente. Ahora puedes iniciar sesión con correo y contraseña.",
+        "success",
+      );
     } catch (error) {
       console.error("Error al vincular contraseña:", error);
       if (error.code === "auth/provider-already-linked") {
@@ -91,7 +109,7 @@ export function AccountSettings() {
 
   const getMethodName = (method) => {
     const methodMap = {
-      "password": "Correo y contraseña",
+      password: "Correo y contraseña",
       "google.com": "Google",
       "github.com": "GitHub",
       "facebook.com": "Facebook",
@@ -110,8 +128,12 @@ export function AccountSettings() {
           <Card.Title>Información de la cuenta</Card.Title>
           {user && (
             <div>
-              <p><strong>Correo:</strong> {user.email}</p>
-              <p><strong>UID:</strong> {user.uid}</p>
+              <p>
+                <strong>Correo:</strong> {user.email}
+              </p>
+              <p>
+                <strong>UID:</strong> {user.uid}
+              </p>
             </div>
           )}
         </Card.Body>
@@ -121,13 +143,16 @@ export function AccountSettings() {
         <Card.Body>
           <Card.Title>Métodos de inicio de sesión</Card.Title>
           <p className="text-muted">Métodos vinculados a tu cuenta:</p>
-          
+
           <ul className="list-group mb-3">
             {authMethods.length === 0 ? (
               <li className="list-group-item">Cargando...</li>
             ) : (
               authMethods.map((method) => (
-                <li key={method} className="list-group-item d-flex justify-content-between align-items-center">
+                <li
+                  key={method}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
                   {getMethodName(method)}
                   <span className="badge bg-success">Activo</span>
                 </li>
@@ -136,8 +161,8 @@ export function AccountSettings() {
           </ul>
 
           {!hasPassword && (
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={() => setShowPasswordModal(true)}
             >
               Agregar contraseña
@@ -146,7 +171,10 @@ export function AccountSettings() {
         </Card.Body>
       </Card>
 
-      <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)}>
+      <Modal
+        show={showPasswordModal}
+        onHide={() => setShowPasswordModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Agregar contraseña</Modal.Title>
         </Modal.Header>
@@ -168,9 +196,7 @@ export function AccountSettings() {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </Button>
               </div>
-              <Form.Text className="text-muted">
-                Mínimo 6 caracteres
-              </Form.Text>
+              <Form.Text className="text-muted">Mínimo 6 caracteres</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -193,7 +219,10 @@ export function AccountSettings() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowPasswordModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowPasswordModal(false)}
+          >
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleAddPassword}>
