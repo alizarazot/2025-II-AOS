@@ -8,6 +8,16 @@ import {
 } from "./providers-service/providers-service";
 import { auditoriaService } from "../../services/auditoria-service";
 
+import * as Excel from "exceljs";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+
 export function Providers() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true); // igual que productos: comienza en true
@@ -155,20 +165,36 @@ export function Providers() {
 
   return (
     <div className="container py-3">
-      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-3">
+      <div className="d-flex flex-md-row flex-column justify-content-md-between align-items-start align-items-md-center mb-3 gap-2">
         <h2 className="mx-0 my-md-0 my-2">Gestión de Proveedores</h2>
         {!showForm && (
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              setShowForm(true);
-              setEditingId(null);
-              setForm(emptyForm);
-            }}
-            disabled={loading}
-          >
-            + Agregar Proveedor
-          </button>
+          <div className="d-flex gap-2 flex-wrap">
+            <button
+              className="btn btn-success"
+              onClick={() => DownloadProvidersAsExcel(providers)}
+              disabled={loading || providers.length === 0}
+            >
+              📊 Descargar Excel
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => DownloadProvidersAsPDF(providers)}
+              disabled={loading || providers.length === 0}
+            >
+              📄 Descargar PDF
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setShowForm(true);
+                setEditingId(null);
+                setForm(emptyForm);
+              }}
+              disabled={loading}
+            >
+              + Agregar Proveedor
+            </button>
+          </div>
         )}
       </div>
 
@@ -401,4 +427,144 @@ export function Providers() {
       )}
     </div>
   );
+}
+
+// Función para descargar proveedores como Excel
+async function DownloadProvidersAsExcel(providers) {
+  const workbook = new Excel.Workbook();
+  workbook.creator = "Temu2";
+  workbook.lastModifiedBy = "Temu2 WebApp";
+  workbook.created = new Date();
+
+  const sheet = workbook.addWorksheet("Proveedores", {
+    properties: { tabColor: { argb: "FFFFC107" } },
+  });
+
+  sheet.columns = [
+    { header: "Nombre", key: "Name", width: 25 },
+    { header: "Empresa", key: "CompanyName", width: 30 },
+    { header: "Email", key: "Email", width: 30 },
+    { header: "Teléfono", key: "Phone", width: 15 },
+    { header: "Dirección", key: "Address", width: 40 },
+    { header: "Categoría", key: "Category", width: 25 },
+    { header: "Calificación", key: "Rating", width: 12 },
+    { header: "Estado", key: "State", width: 12 },
+    { header: "Creado", key: "Created", width: 25 },
+  ];
+
+  providers.forEach((provider) => {
+    sheet.addRow({
+      Name: provider.Name || "N/A",
+      CompanyName: provider.CompanyName || "N/A",
+      Email: provider.Email || "N/A",
+      Phone: provider.Phone || "N/A",
+      Address: provider.Address || "N/A",
+      Category: provider.Category || "N/A",
+      Rating: provider.Rating || 0,
+      State: provider.State || "N/A",
+      Created: provider._createdAtStr || "N/A",
+    });
+  });
+
+  workbook.modified = new Date();
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+  const downloadUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = downloadUrl;
+  anchor.download = "proveedores.xlsx";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+}
+
+// Función para descargar proveedores como PDF
+async function DownloadProvidersAsPDF(providers) {
+  const styles = StyleSheet.create({
+    page: {
+      padding: 30,
+      fontSize: 10,
+    },
+    title: {
+      fontSize: 18,
+      marginBottom: 20,
+      fontWeight: "bold",
+    },
+    table: {
+      width: "100%",
+      borderStyle: "solid",
+      borderWidth: 1,
+      borderColor: "#000",
+    },
+    tableHeader: {
+      flexDirection: "row",
+      backgroundColor: "#ffc107",
+      color: "#000",
+      fontWeight: "bold",
+    },
+    tableRow: {
+      flexDirection: "row",
+      borderBottomWidth: 1,
+      borderBottomColor: "#000",
+      borderBottomStyle: "solid",
+    },
+    tableRowEven: {
+      backgroundColor: "#f8f9fa",
+    },
+    tableCell: {
+      padding: 5,
+      fontSize: 8,
+      borderRightWidth: 1,
+      borderRightColor: "#000",
+      borderRightStyle: "solid",
+    },
+    tableCellHeader: {
+      padding: 5,
+      fontSize: 8,
+      borderRightWidth: 1,
+      borderRightColor: "#000",
+      borderRightStyle: "solid",
+      fontWeight: "bold",
+    },
+  });
+
+  const blob = await pdf(
+    <Document>
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <Text style={styles.title}>Lista de Proveedores</Text>
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={[styles.tableCellHeader, { width: "15%" }]}>Nombre</Text>
+            <Text style={[styles.tableCellHeader, { width: "18%" }]}>Empresa</Text>
+            <Text style={[styles.tableCellHeader, { width: "20%" }]}>Email</Text>
+            <Text style={[styles.tableCellHeader, { width: "15%" }]}>Teléfono</Text>
+            <Text style={[styles.tableCellHeader, { width: "17%" }]}>Categoría</Text>
+            <Text style={[styles.tableCellHeader, { width: "8%" }]}>Rating</Text>
+            <Text style={[styles.tableCellHeader, { width: "7%" }]}>Estado</Text>
+          </View>
+          {providers.map((provider, idx) => (
+            <View key={provider.id} style={[styles.tableRow, idx % 2 === 0 && styles.tableRowEven]}>
+              <Text style={[styles.tableCell, { width: "15%" }]}>{provider.Name}</Text>
+              <Text style={[styles.tableCell, { width: "18%" }]}>{provider.CompanyName}</Text>
+              <Text style={[styles.tableCell, { width: "20%" }]}>{provider.Email}</Text>
+              <Text style={[styles.tableCell, { width: "15%" }]}>{provider.Phone}</Text>
+              <Text style={[styles.tableCell, { width: "17%" }]}>{provider.Category}</Text>
+              <Text style={[styles.tableCell, { width: "8%" }]}>{"★".repeat(provider.Rating || 0)}</Text>
+              <Text style={[styles.tableCell, { width: "7%" }]}>{provider.State}</Text>
+            </View>
+          ))}
+        </View>
+      </Page>
+    </Document>
+  ).toBlob();
+
+  const downloadUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = downloadUrl;
+  anchor.download = "proveedores.pdf";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
 }
